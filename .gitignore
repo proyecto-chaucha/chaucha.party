@@ -1,3 +1,6 @@
+# Standard Python .gitignore
+# --------------------------
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -8,7 +11,6 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -79,11 +81,10 @@ celerybeat-schedule
 # SageMath parsed files
 *.sage.py
 
-# dotenv
+# Environments
 .env
-
-# virtualenv
 .venv
+env/
 venv/
 ENV/
 
@@ -99,3 +100,21 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+
+# Other standards .gitignore
+# --------------------------
+
+# Mac files
+.DS_Store
+
+# IDEs
+.idea/
+
+
+# Application-specific .gitignores
+# --------------------------------
+
+app.sqlite
+app/local_settings.py
+

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block body %}
+
+<form action="/login" method="post">
+
+<div class="field">
+	<p class="control has-icons-left">
+		<input class="input is-large" type="address" name="address" placeholder="Chaucha Address">
+		<span class="icon is-left">
+			<i class="fab fa-adn"></i>
+		</span>
+	</p>
+</div>
+<div class="field">
+	<p class="control has-icons-left">
+		<input class="input is-large" type="password" name="privkey" placeholder="Private Key">
+		<span class="icon is-left">
+			<i class="fas fa-key"></i>
+		</span>
+	</p>
+</div>
+<div class="field">
+	<p class="control">
+		<button class="button is-large is-success is-right">
+			Login&nbsp;<i class="fas fa-sign-in-alt"></i>
+		</button>
+	</p>
+</div>
+
+</form>
+
+{% endblock %}
