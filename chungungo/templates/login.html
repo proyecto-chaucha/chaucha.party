@@ -1,19 +1,23 @@
 {% extends "base.html" %}
 {% block body %}
 
+<div class="content">
+	<h1>Login</h1>
+</div>
+
 <form action="/login" method="post">
 
 <div class="field">
 	<p class="control has-icons-left">
-		<input class="input is-large" type="address" name="address" placeholder="Chaucha Address">
+		<input class="input is-large is-primary is-rounded" type="text" name="address" placeholder="Chaucha Address">
 		<span class="icon is-left">
-			<i class="fab fa-adn"></i>
+			<i class="far fa-user"></i>
 		</span>
 	</p>
 </div>
 <div class="field">
 	<p class="control has-icons-left">
-		<input class="input is-large" type="password" name="privkey" placeholder="Private Key">
+		<input class="input is-large is-primary is-rounded" type="password" name="privkey" placeholder="Private Key">
 		<span class="icon is-left">
 			<i class="fas fa-key"></i>
 		</span>
@@ -21,9 +25,11 @@
 </div>
 <div class="field">
 	<p class="control">
-		<button class="button is-large is-success is-right">
-			Login&nbsp;<i class="fas fa-sign-in-alt"></i>
+		<div class="buttons is-right">
+		<button class="button is-large is-primary is-rounded">
+			<i class="fas fa-sign-in-alt"></i>
 		</button>
+		</div>
 	</p>
 </div>
 

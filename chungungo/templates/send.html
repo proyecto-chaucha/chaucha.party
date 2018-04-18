@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="columns">
+	<div class="column is-narrow" id="cameracolumn">
+		<video id="preview" hidden="true"></video>
+	</div>
+	<div class="column">
+		<div class="content">
+			<h1>Enviar</h1>
+			<h4>Tienes {{ balance[0] - balance[1] }} CHA disponibles para transferir</h4>
+		</div>
+		
+		<form action="/send" method="post">
+
+		<div class="field">
+			<p class="control has-icons-left">
+				<input class="input is-large is-primary is-rounded" id="address" type="text" name="address" placeholder="Chaucha Address">
+				<span class="icon is-left">
+					<i class="far fa-user"></i>
+				</span>
+			</p>
+		</div>
+		<div class="field">
+			<p class="control has-icons-left">
+				<input class="input is-large is-primary is-rounded" type="tel" name="amount" placeholder="Monto">
+				<span class="icon is-left">
+					<i class="fas fa-dollar-sign"></i>
+				</span>
+			</p>
+		</div>
+
+		<div class="field">
+			<p class="control has-icons-left">
+				<input class="input is-large is-primary is-rounded" type="text" name="msg" placeholder="Mensaje (Opcional)">
+				<span class="icon is-left">
+					<i class="far fa-smile"></i>
+				</span>
+			</p>
+		</div>
+		<div class="field">
+			<p class="control">
+				<div class="buttons is-right">
+				<button class="button is-large is-primary is-rounded">
+					<i class="fas fa-bullhorn"></i>
+				</button>
+				</div>
+			</p>
+		</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript" src="{{ url_for('static', filename='instascan.min.js') }}"></script>
+
+<script type="text/javascript">
+	let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+	scanner.addListener('scan', function (content) {
+		$('#address').attr('value', content);
+		scanner.stop();
+		$('#preview').attr('hidden', true);
+		$('#cameracolumn').attr('hidden', true);
+	});
+	Instascan.Camera.getCameras().then(function (cameras) {
+	if (cameras.length > 0) {
+		scanner.start(cameras[0]);
+		$('#preview').attr('hidden', false)
+	} else {
+		console.error('No cameras found.');
+	}
+	}).catch(function (e) {
+	console.error(e);
+	});
+</script>
+</script>
+
+{% endblock %}

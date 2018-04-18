@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Chungungo</title>
+	<title>Codename: Chungungo</title>
 	<link href="{{ url_for('static', filename='favicon.ico') }}" rel="icon" type="image/x-icon">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
@@ -13,12 +13,12 @@
 	<meta name="author" content="César Vásquez C.">	
 	<script type="text/javascript" src="{{ url_for('static', filename='particles.min.js') }}"></script>
 	<style type="text/css">
-	@import url('https://fonts.googleapis.com/css?familySource+Code+Pro');
+	@import url('https://fonts.googleapis.com/css?family=Quicksand');
 
-	body { font-family: 'Source Code Pro', monospace; font-size: 1em; }
-	.mini { letter-spacing: 1px; }
+	body { font-family: 'Quicksand', sans-serif; font-size: 1em; }
+	h1 {letter-spacing: 3px; }
 	#particle {
-		background-color: #F9F9F9;
+		background-color: #FFF;
 		position:fixed;
 		top:0;
 		right:0;
@@ -29,36 +29,44 @@
 	</style>
 </head>
 <body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <div id="particle"></div>
 <script type="text/javascript">
 // ParticlesJS Config.
-particlesJS("particle",{particles:{number:{value:60,density:{enable:!0,value_area:700}},color:{value:"#DDD"},shape:{type:"circle",stroke:{width:0,color:"#AAA"},polygon:{nb_sides:5}},opacity:{value:0.8,random:!1,anim:{enable:!1,speed:1,opacity_min:.1,sync:!1}},size:{value:2,random:!0,anim:{enable:!1,speed:40,size_min:.1,sync:!1}},line_linked:{enable:!0,distance:150,color:"#333",opacity:.4,width:1},move:{enable:!0,speed:6,direction:"none",random:!1,straight:!1,out_mode:"out",bounce:!1,attract:{enable:!1,rotateX:600,rotateY:1200}}},interactivity:{detect_on:"canvas",events:{onhover:{enable:!0,mode:"grab"},onclick:{enable:!0,mode:"push"},resize:!0},modes:{grab:{distance:140,line_linked:{opacity:1}},bubble:{distance:400,size:40,duration:2,opacity:8,speed:3},repulse:{distance:200,duration:.4},push:{particles_nb:4},remove:{particles_nb:2}}},retina_detect:!0});
+particlesJS("particle",{particles:{number:{value:60,density:{enable:!0,value_area:700}},color:{value:"#05C9E3"},shape:{type:"circle",stroke:{width:2,color:"#05C9E3"},polygon:{nb_sides:5}},opacity:{value:0.8,random:!1,anim:{enable:!1,speed:1,opacity_min:.1,sync:!1}},size:{value:2,random:!0,anim:{enable:!1,speed:40,size_min:.1,sync:!1}},line_linked:{enable:!0,distance:150,color:"#3DF0FD",opacity:.7,width:2},move:{enable:!0,speed:3,direction:"none",random:!1,straight:!1,out_mode:"out",bounce:!1,attract:{enable:!1,rotateX:600,rotateY:1200}}},interactivity:{detect_on:"canvas",events:{onhover:{enable:!0,mode:"grab"},onclick:{enable:!0,mode:"push"},resize:!0},modes:{grab:{distance:140,line_linked:{opacity:1}},bubble:{distance:400,size:40,duration:2,opacity:8,speed:3},repulse:{distance:200,duration:.4},push:{particles_nb:4},remove:{particles_nb:2}}},retina_detect:!0});
 </script>
 
 <section class="hero is-fullheight">
 	<!-- Hero head: will stick at the top -->
-	<div class="hero-head	is-danger ">
+	<div class="hero-head is-danger">
 	<header class="navbar">
 		<div class="container">
 		<div class="navbar-brand">
-			<span class="navbar-burger burger" data-target="navbarMenuHeroC">
+			<span class="navbar-burger burger" onclick="document.querySelector('.navbar-menu').classList.toggle('is-active');">
 			<span></span>
 			<span></span>
 			<span></span>
 			</span>
 		</div>
-		<div id="navbarMenuHeroC" class="navbar-menu">
+		<div id='nav-menu' class="navbar-menu" v-on:click="toggleNav">
 			<div class="navbar-end">
-			<a class="navbar-item" href="/">
-				Home
+			<a class="navbar-item" href="{{ url_for('index') }}">
+				Página Principal
 			</a>
 			{% if 'address' in session %}
-			<a class="navbar-item" href="/logout">
-				Logout
+			<a class="navbar-item" href="{{ url_for('send') }}">
+				Enviar Chauchas
+			</a>
+			<a class="navbar-item" href="{{ url_for('send') }}">
+				Historial
+			</a>
+			<a class="navbar-item" href="{{ url_for('logout') }}">
+				Cerrar Sesión
 			</a>
 			{% else %}
-			<a class="navbar-item" href="/login">
-				Login
+			<a class="navbar-item" href="{{ url_for('login') }}">
+				Iniciar Sesión
 			</a>
 			{% endif %}
 			</div>
@@ -92,13 +100,12 @@ particlesJS("particle",{particles:{number:{value:60,density:{enable:!0,value_are
 	<div class="hero-foot">
 	<nav class="tabs is-boxed is-fullwidth">
 		<div class="container has-text-centered">
-			<p class="heading">Proyecto Chaucha / Chungungo / 2017-2018
+			<p class="heading">Proyecto Chaucha<br>2017 - 2018
 		</div>
 	</nav>
 	</div>
 </section>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript">
 	$(document).on('click', '.notification > button.delete', function() {
 		$(this).parent().addClass('is-hidden');
