@@ -8,7 +8,7 @@
 	<div class="column">
 		<div class="content">
 			<h1>Enviar</h1>
-			<h4>Tienes {{ balance[0] - balance[1] }} CHA disponibles para transferir</h4>
+			<h4>Tienes {{ balance[0]|round(8) }} CHA disponibles para transferir</h4>
 		</div>
 		
 		<form action="/send" method="post">

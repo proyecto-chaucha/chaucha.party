@@ -8,14 +8,29 @@ magic = 88
 fee = 0.001
 satoshi = 100000000
 
+def gethistory(addr):
+	history = get('http://insight.chaucha.cl/api/txs/?address=' + addr).json()
+	txs = []
+	for i in history['txs']:
+		date = time.strftime('%d.%m.%Y %H:%M:%S', time.localtime(int(i['time'])))
+		tx = {'confirmations' : i['confirmations'], 'txid' : i['txid'], 'time' : date}
+		txs.append(tx)
+	return txs
+
 def getbalance(addr):
 	# Captura de balance por tx sin gastar
-	balance = get('http://insight.chaucha.cl/api/addr/' + addr).json()
+	unspent = get('http://insight.chaucha.cl/api/addr/' + addr + '/utxo').json()
 		
-	confirmed = balance['balance']
-	unconfirmed = abs(balance['unconfirmedBalance'])
+	confirmed = unconfirmed = 0
+
+	for i in unspent:
+		if i['confirmations'] >= 6:
+			confirmed += i['amount']
+		else:
+			unconfirmed += i['amount']
 
 	return [confirmed, unconfirmed]
+
 
 def getunspent(addr, sendamount):
 	# Captura de balance por tx sin gastar

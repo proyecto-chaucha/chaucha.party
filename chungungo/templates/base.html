@@ -13,9 +13,11 @@
 	<meta name="author" content="César Vásquez C.">	
 	<script type="text/javascript" src="{{ url_for('static', filename='particles.min.js') }}"></script>
 	<style type="text/css">
-	@import url('https://fonts.googleapis.com/css?family=Quicksand');
+	@import url('https://fonts.googleapis.com/css?family=Quicksand|Source+Code+Pro');
 
 	body { font-family: 'Quicksand', sans-serif; font-size: 1em; }
+	.mono { font-family: 'Source Code Pro', monospace; font-size: 0.9em; }
+	.bg { background: rgba(255, 255, 255, 0.3); }
 	h1 {letter-spacing: 3px; }
 	#particle {
 		background-color: #FFF;
@@ -56,9 +58,9 @@ particlesJS("particle",{particles:{number:{value:60,density:{enable:!0,value_are
 			</a>
 			{% if 'address' in session %}
 			<a class="navbar-item" href="{{ url_for('send') }}">
-				Enviar Chauchas
+				Enviar
 			</a>
-			<a class="navbar-item" href="{{ url_for('send') }}">
+			<a class="navbar-item" href="{{ url_for('history') }}">
 				Historial
 			</a>
 			<a class="navbar-item" href="{{ url_for('logout') }}">
@@ -100,7 +102,7 @@ particlesJS("particle",{particles:{number:{value:60,density:{enable:!0,value_are
 	<div class="hero-foot">
 	<nav class="tabs is-boxed is-fullwidth">
 		<div class="container has-text-centered">
-			<p class="heading">Proyecto Chaucha<br>2017 - 2018
+			<p class="heading"><a href="https://chaucha.cl/" target="_blank">Proyecto Chaucha</a></p>
 		</div>
 	</nav>
 	</div>

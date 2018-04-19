@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="content">
+	<h1>Historial de Transacciones</h1>
+</div>
+
+<table class="table bg mono is-hoverable is-fullwidth">
+	<thead>
+		<tr class="has-text-centered">
+			<th class="has-text-centered">Fecha</th>
+			<th class="has-text-centered is-hidden-touch">ID de transacción</th>
+			<th class="has-text-centered is-hidden-desktop">TX ID</th>
+			<th class="has-text-centered">Confirmaciones</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for tx in history %}
+		<tr>
+			<td class="has-text-centered">{{ tx['time'] }}</td>
+			<td class="has-text-centered is-hidden-touch"><a href="http://insight.chaucha.cl/tx/{{ tx['txid'] }}" target="_blank" class="has-text-primary">{{ tx['txid'] }}</a></td>
+			<td class="has-text-centered is-hidden-desktop"><a href="http://insight.chaucha.cl/tx/{{ tx['txid'] }}" target="_blank" class="has-text-primary">{{ tx['txid'][:12] }}...</a></td>
+			<td class="has-text-centered">{{ tx['confirmations'] }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

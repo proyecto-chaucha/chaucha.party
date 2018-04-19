@@ -11,6 +11,14 @@ def index():
 	else:
 		return render_template('index.html')
 
+@app.route('/history')
+def history():
+	if 'address' in session:
+		history = gethistory(session['address'])
+		return render_template('history.html', history=history)
+	else:
+		return render_template('index.html')
+
 
 @app.route('/send', methods=['get','POST'])
 def send():
@@ -21,9 +29,13 @@ def send():
 			address = session['address']
 			privkey = session['privkey']
 
-			receptor = request.form['address']
-			op_return = request.form['msg']
-			amount = float(request.form['amount'])
+			try:
+				receptor = request.form['address']
+				op_return = request.form['msg']
+				amount = float(request.form['amount'])
+			except ValueError:
+				flash('Ingresa valores válidos', 'is-danger')
+				return redirect(url_for('send'))
 
 			verify = check_bc(receptor)
 
@@ -38,7 +50,8 @@ def send():
 					except:
 						msg = broadcasting.text
 						flash(Markup('ERROR<br>%s' % msg), 'is-danger')
-						return redirect(url_for('home'))
+					
+					return redirect(url_for('index'))
 
 				else:
 					flash('Error de monto', 'is-danger')
@@ -47,7 +60,7 @@ def send():
 
 		return render_template('send.html', balance=balance)
 	else:
-		return render_template('index.html')
+		return redirect(url_for('index'))
 
 
 
