@@ -67,20 +67,17 @@ def send():
 @app.route('/login', methods=['get','POST'])
 def login():
 	if request.method == 'POST':
-		address = request.form['address']
 		privkey = request.form['privkey']
 
-		verify = check_bc(address)
+		try:
+			address = privtoaddr(privkey, 88)
+			session['address'] = address
+			session['privkey'] = privkey
 
-		if verify and address.startswith('c') and len(privkey) == 52:
-			login_addr = privtoaddr(privkey, 88)
-
-			if login_addr == address:
-				session['address'] = address
-				session['privkey'] = privkey
-				return redirect(url_for('index'))
-
-		flash('Login error', 'is-danger')
+		except AssertionError:
+			flash('Private Key invalida')
+	
+		return redirect(url_for('index'))
 
 	return render_template('login.html')
 

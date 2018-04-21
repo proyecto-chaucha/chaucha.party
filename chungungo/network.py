@@ -9,7 +9,7 @@ fee = 0.001
 satoshi = 100000000
 
 def gethistory(addr):
-	history = get('http://insight.chaucha.cl/api/txs/?address=' + addr).json()
+	history = get('https://explorer.cha.terahash.cl/api/txs/?address=' + addr).json()
 	txs = []
 	for i in history['txs']:
 		date = time.strftime('%d.%m.%Y %H:%M:%S', time.localtime(int(i['time'])))
@@ -19,7 +19,7 @@ def gethistory(addr):
 
 def getbalance(addr):
 	# Captura de balance por tx sin gastar
-	unspent = get('http://insight.chaucha.cl/api/addr/' + addr + '/utxo').json()
+	unspent = get('https://explorer.cha.terahash.cl/api/addr/' + addr + '/utxo').json()
 		
 	confirmed = unconfirmed = 0
 
@@ -34,7 +34,7 @@ def getbalance(addr):
 
 def getunspent(addr, sendamount):
 	# Captura de balance por tx sin gastar
-	unspent = get('http://insight.chaucha.cl/api/addr/' + addr + '/utxo').json()
+	unspent = get('https://explorer.cha.terahash.cl/api/addr/' + addr + '/utxo').json()
 
 	inputs = []
 	unspent_balance = 0
@@ -91,7 +91,7 @@ def broadcast(session, unspent, amount, receptor, op_return):
 	for i in range(len(inputs)):
 		tx = sign(tx, i, privkey)
 
-	broadcasting = post('http://insight.chaucha.cl/api/tx/send', data={'rawtx' : tx})
+	broadcasting = post('https://explorer.cha.terahash.cl/api/tx/send', data={'rawtx' : tx})
 
 	return broadcasting
 

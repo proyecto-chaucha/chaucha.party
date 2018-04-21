@@ -55,12 +55,14 @@
 
 <script type="text/javascript">
 	let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+
 	scanner.addListener('scan', function (content) {
 		$('#address').attr('value', content);
 		scanner.stop();
 		$('#preview').attr('hidden', true);
 		$('#cameracolumn').attr('hidden', true);
 	});
+
 	Instascan.Camera.getCameras().then(function (cameras) {
 	if (cameras.length > 0) {
 		scanner.start(cameras[0]);
