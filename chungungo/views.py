@@ -46,7 +46,7 @@ def send():
 					msg = broadcast(session, unspent, amount, receptor, op_return)
 
 					try:
-						flash(Markup('Transacción completada<br>%s' % msg.json()['txid']), 'is-primary')
+						flash('Transacción enviada', 'is-primary')
 					except:
 						msg = broadcasting.text
 						flash(Markup('ERROR<br>%s' % msg), 'is-danger')

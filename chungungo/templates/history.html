@@ -19,7 +19,7 @@
 		<tr>
 			<td class="has-text-centered">{{ tx['time'] }}</td>
 			<td class="has-text-centered is-hidden-touch"><a href="http://insight.chaucha.cl/tx/{{ tx['txid'] }}" target="_blank" class="has-text-primary">{{ tx['txid'] }}</a></td>
-			<td class="has-text-centered is-hidden-desktop"><a href="http://insight.chaucha.cl/tx/{{ tx['txid'] }}" target="_blank" class="has-text-primary">{{ tx['txid'][:12] }}...</a></td>
+			<td class="has-text-centered is-hidden-desktop"><a href="http://insight.chaucha.cl/tx/{{ tx['txid'] }}" target="_blank" class="has-text-primary">{{ tx['txid'][:20] }}...</a></td>
 			<td class="has-text-centered is-hidden-touch">{{ tx['confirmations'] }}</td>
 		</tr>
 		{% endfor %}
