@@ -6,10 +6,10 @@
 		<img src="{{ qrcode(session['address'], error_correction='H') }}"><br>
 		{{ session['address'] }}
 	</p>
-	<h1>Balance: {{ balance[0]|round(8) }} CHA<br>
+	<h3>Balance: {{ balance[0]|round(8) }} CHA<br>
 		{% if not balance[1] == 0 %}
 			Sin confirmar: {{ balance[1]|round(8) }} CHA
 		{% endif %}
-	</h1>
+	</h3>
 </div>
 {% endblock %}
