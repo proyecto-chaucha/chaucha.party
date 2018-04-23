@@ -2,6 +2,7 @@ from flask import render_template, redirect, url_for, request, session, flash, M
 from chungungo import app
 from chungungo.validator import check_bc
 from chungungo.network import *
+from os import urandom
 
 @app.route('/')
 def index():
@@ -10,6 +11,16 @@ def index():
 		return render_template('home.html', balance=balance)
 	else:
 		return render_template('index.html')
+
+@app.route('/paper')
+def paper():
+	rand_string = urandom(2048)
+	privkey = sha256(rand_string)
+	address = privtoaddr(privkey, 88)
+	wallet = {'address' : address, 'privkey' : privkey}
+	return render_template('wallet.html', wallet=wallet)
+
+
 
 @app.route('/history')
 def history():
@@ -33,32 +44,36 @@ def send():
 				receptor = request.form['address']
 				op_return = request.form['msg']
 				amount = float(request.form['amount'])
+
+				verify = check_bc(receptor)
+
+				if not len(op_return) > 0 or len(op_return) <= 255:
+					if verify and receptor.startswith('c'):
+						unspent = getunspent(address, amount)
+
+						if amount <= unspent['used'] and amount > 0:
+							msg = broadcast(session, unspent, amount, receptor, op_return)
+
+							try:
+								flash('Transacción enviada', 'is-primary')
+							except:
+								msg = broadcasting.text
+								flash(Markup('ERROR<br>%s' % msg), 'is-danger')
+							
+							return redirect(url_for('index'))
+
+						else:
+							flash('Saldo insuficiente o inválido', 'is-danger')
+					else:
+						flash('dirección inválida', 'is-danger')
+				else:
+					flash('Ingresa un mensaje', 'is-danger')
 			except ValueError:
 				flash('Ingresa valores válidos', 'is-danger')
-				return redirect(url_for('send'))
-
-			verify = check_bc(receptor)
-
-			if verify and receptor.startswith('c'):
-				unspent = getunspent(address, amount)
-
-				if amount <= unspent['used'] and amount > 0:
-					msg = broadcast(session, unspent, amount, receptor, op_return)
-
-					try:
-						flash('Transacción enviada', 'is-primary')
-					except:
-						msg = broadcasting.text
-						flash(Markup('ERROR<br>%s' % msg), 'is-danger')
-					
-					return redirect(url_for('index'))
-
-				else:
-					flash('Error de monto', 'is-danger')
-			else:
-				flash('dirección invalida', 'is-danger')
-
-		return render_template('send.html', balance=balance)
+		
+			return redirect(url_for('send'))
+		else:
+			return render_template('send.html', balance=balance)
 	else:
 		return redirect(url_for('index'))
 
@@ -75,7 +90,7 @@ def login():
 			session['privkey'] = privkey
 
 		except AssertionError:
-			flash('Private Key invalida')
+			flash('Llave privada erronea', 'is-danger')
 	
 		return redirect(url_for('index'))
 

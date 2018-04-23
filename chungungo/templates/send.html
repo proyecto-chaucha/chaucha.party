@@ -1,54 +1,71 @@
 {% extends "base.html" %}
 {% block body %}
 
-<div class="content">
-	<h1>Enviar</h1>
-	<h4>Tienes {{ balance[0]|round(8) }} CHA disponibles para transferir</h4>
-</div>
+<h1 class="title">Enviar Chauchas</h1>
+<p class="subtitle mono">Tienes {{ balance[0]|round(8) }} CHA disponibles para transferir</p>
 
 <form action="/send" method="post">
 
-<div class="field has-addons">
-	<div class="control is-expanded has-icons-left">
-		<input class="input is-large is-primary is-rounded" id="address" type="text" name="address" placeholder="Dirección">
-		<span class="icon is-left">
-			<i class="far fa-user"></i>
-		</span>
+<div class="field is-horizontal">
+	<div class="field-label is-large">
+		<label class="label">Dirección</label>
 	</div>
-	<div class="control">
-		<div class="file is-primary is-rounded is-large">
-		<label class="file-label">
-		<input class="file-input" type=file accept="image/*" capture=environment onchange="openQRCamera(this);">
-		<span class="file-cta">
-			<span class="file-icon">
-				<i class="fas fa-camera-retro"></i>
-			</span>
-			<span class="file-label">
-				!
-			</span>
-		</span>
-		</label>
+	<div class="field-body">
+		<div class="field has-addons">
+			<div class="control is-expanded has-icons-left">
+				<input class="input is-large is-primary" id="address" type="text" name="address">
+				<span class="icon is-left">
+					<i class="fas fa-key"></i>
+				</span>
+			</div>
+			<div class="control">
+				<div class="file is-primary is-large">
+					<label class="file-label">
+						<input class="file-input" type=file accept="image/*" capture=environment onchange="openQRCamera(this);">
+						<span class="file-cta">
+							<span class="file-icon">
+								<i class="fas fa-qrcode fa-2x"></i>
+							</span>
+						</span>
+					</label>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
 
-<div class="field">
-	<p class="control has-icons-left">
-		<input class="input is-large is-primary is-rounded" type="text" name="amount" placeholder="Monto">
-		<span class="icon is-left">
-			<i class="fas fa-dollar-sign"></i>
-		</span>
-	</p>
+<div class="field is-horizontal">
+	<div class="field-label is-large">
+		<label class="label">Monto</label>
+	</div>
+	<div class="field-body">
+		<div class="field">
+			<p class="control has-icons-left">
+				<input class="input is-large is-primary" type="text" name="amount">
+				<span class="icon is-left">
+					<i class="fas fa-dollar-sign"></i>
+				</span>
+			</p>
+		</div>
+	</div>
 </div>
 
-<div class="field">
-	<p class="control has-icons-left">
-		<input class="input is-large is-primary is-rounded" type="text" name="msg" placeholder="Mensaje (Opcional)">
-		<span class="icon is-left">
-			<i class="far fa-smile"></i>
-		</span>
-	</p>
+<div class="field is-horizontal">
+	<div class="field-label is-large">
+		<label class="label">Mensaje</label>
+	</div>
+	<div class="field-body">
+		<div class="field">
+			<p class="control has-icons-left">
+				<input class="input is-large is-primary" type="text" name="msg">
+				<span class="icon is-left">
+					<i class="fas fa-comments"></i>
+				</span>
+			</p>
+		</div>
+	</div>
 </div>
+
 <div class="field">
 	<p class="control">
 		<div class="buttons is-right">

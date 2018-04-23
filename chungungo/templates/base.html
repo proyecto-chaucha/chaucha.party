@@ -2,13 +2,13 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Codename: Chungungo</title>
+	<title>chaucha.party</title>
 	<link href="{{ url_for('static', filename='favicon.ico') }}" rel="icon" type="image/x-icon">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
 
-	<meta name="description" content="Proyecto Chaucha - 2017">
+	<meta name="description" content="Proyecto Chaucha - 2018">
 	<meta name="keywords" content="chaucha, cryptocurrency, chauchera">
 	<meta name="author" content="César Vásquez C.">	
 	<script type="text/javascript" src="{{ url_for('static', filename='particles.min.js') }}"></script>
@@ -69,6 +69,9 @@ particlesJS("particle",{particles:{number:{value:60,density:{enable:!0,value_are
 			{% else %}
 			<a class="navbar-item" href="{{ url_for('login') }}">
 				Iniciar Sesión
+			</a>
+			<a class="navbar-item" href="{{ url_for('paper') }}">
+				Registro
 			</a>
 			{% endif %}
 			</div>

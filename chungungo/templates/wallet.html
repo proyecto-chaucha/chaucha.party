@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block body %}
+
+
+<h1 class="title">Chaucha Paper Wallet</h1>
+<p class="subtitle mono">{{ wallet['address'] }}</p>
+
+<div class="columns">
+	<div class="column has-text-centered">
+		<h3 class="title is-size-4">Dirección pública</h3>
+		<img width="350" height="350" src="{{ qrcode(wallet['address'], error_correction='H', box_size=18) }}">
+	</div>
+	<div class="column has-text-centered">
+		<h3 class="title is-size-4">Llave privada</h3>
+		<img width="350" height="350" src="{{ qrcode(wallet['privkey'], error_correction='H', box_size=18) }}">
+	</div>
+</div>
+
+
+{% endblock %}

@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 {% block body %}
 
-<div class="content">
-	<p class="mono">
-		<img src="{{ qrcode(session['address'], error_correction='H') }}"><br>
-		{{ session['address'] }}
-	</p>
-	<h3>Balance: {{ balance[0]|round(8) }} CHA<br>
-		{% if not balance[1] == 0 %}
-			Sin confirmar: {{ balance[1]|round(8) }} CHA
-		{% endif %}
-	</h3>
-</div>
+
+<img src="{{ qrcode(session['address'], error_correction='H') }}"><br>
+<p class="mono">
+	{{ session['address'] }}
+</p>
+<br>
+<h2 class="title is-4">Balance: {{ balance[0]|round(8) }} CHA<br>
+	{% if not balance[1] == 0 %}
+		Sin confirmar: {{ balance[1]|round(8) }} CHA
+	{% endif %}
+</h2>
+
 {% endblock %}

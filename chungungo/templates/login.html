@@ -1,25 +1,44 @@
 {% extends "base.html" %}
 {% block body %}
 
-<div class="content">
-	<h1>Iniciar sesión</h1>
-</div>
+<h1 class="title">Iniciar sesión</h1>
 
 <form action="/login" method="post">
 
-<div class="field">
-	<p class="control has-icons-left">
-		<input class="input is-large is-primary is-rounded" type="password" name="privkey" placeholder="Private Key">
-		<span class="icon is-left">
-			<i class="fas fa-key"></i>
-		</span>
-	</p>
+
+<div class="field is-horizontal">
+	<div class="field-label is-large">
+		<label class="label">Llave privada</label>
+	</div>
+	<div class="field-body">
+		<div class="field has-addons">
+			<div class="control is-expanded has-icons-left">
+				<input class="input is-large is-primary" id="privkey" type="password" name="privkey">
+				<span class="icon is-left">
+					<i class="fas fa-key"></i>
+				</span>
+			</div>
+			<div class="control">
+				<div class="file is-primary is-large">
+					<label class="file-label">
+						<input class="file-input" type=file accept="image/*" capture=environment onchange="openQRCamera(this);">
+						<span class="file-cta">
+							<span class="file-icon">
+								<i class="fas fa-qrcode fa-2x"></i>
+							</span>
+						</span>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
+
 <div class="field">
 	<p class="control">
 		<div class="buttons is-right">
 		<button class="button is-large is-primary is-rounded">
-			<i class="fas fa-sign-in-alt"></i>
+			 Entrar&nbsp;<i class="fas fa-sign-in-alt"></i>
 		</button>
 		</div>
 	</p>
@@ -27,4 +46,24 @@
 
 </form>
 
+<script type="text/javascript" src="{{ url_for('static', filename='qr_packed.js') }}"></script>
+
+<script type="text/javascript">
+function openQRCamera(node) {
+  var reader = new FileReader();
+  reader.onload = function() {
+    node.value = "";
+    qrcode.callback = function(res) {
+      if(res instanceof Error) {
+        alert("No QR code found. Please make sure the QR code is within the camera's frame and try again.");
+      } else {
+	    $('#privkey').attr('value', res);
+      }
+    };
+    qrcode.decode(reader.result);
+  };
+  reader.readAsDataURL(node.files[0]);
+}
+
+</script>
 {% endblock %}
