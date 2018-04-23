@@ -88,11 +88,10 @@ def login():
 			address = privtoaddr(privkey, 88)
 			session['address'] = address
 			session['privkey'] = privkey
-
-		except AssertionError:
+			return redirect(url_for('index'))
+		
+		except:
 			flash('Llave privada erronea', 'is-danger')
-	
-		return redirect(url_for('index'))
 
 	return render_template('login.html')
 
