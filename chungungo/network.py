@@ -8,14 +8,26 @@ magic = 88
 fee = 0.001
 satoshi = 100000000
 
-def gethistory(addr):
-	history = get('https://explorer.cha.terahash.cl/api/txs/?address=' + addr).json()
+def gethistory(addr, page=0):
+	history = get('https://explorer.cha.terahash.cl/api/txs/?address=' + addr + '&pageNum=' + str(page)).json()
 	txs = []
 	for i in history['txs']:
 		date = time.strftime('%d.%m.%Y %H:%M:%S', time.localtime(int(i['time'])))
-		tx = {'confirmations' : i['confirmations'], 'txid' : i['txid'], 'time' : date}
+		msg_str = ''
+		for j in i['vout']:
+			hex_script = j['scriptPubKey']['hex']
+			if hex_script.startswith('6a'):
+				if len(hex_script) <= 77*2:
+					sub_script = hex_script[4:]
+				else:
+					sub_script = hex_script[6:]
+
+				msg_str = binascii.a2b_hex(sub_script).decode('utf-8', errors='ignore')
+
+		tx = {'confirmations' : i['confirmations'], 'txid' : i['txid'], 'time' : date, 'msg' : msg_str}
 		txs.append(tx)
-	return txs
+	pages = history['pagesTotal']
+	return [txs, pages]
 
 def getbalance(addr):
 	# Captura de balance por tx sin gastar

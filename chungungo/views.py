@@ -21,12 +21,19 @@ def paper():
 	return render_template('wallet.html', wallet=wallet)
 
 
-
 @app.route('/history')
 def history():
 	if 'address' in session:
-		history = gethistory(session['address'])
-		return render_template('history.html', history=history)
+		if request.args.get('page'):
+			current_page = int(request.args.get('page')) - 1
+		else:
+			current_page = 0
+
+		info = gethistory(session['address'], current_page)
+		history = info[0]
+		pages = info[1]
+
+		return render_template('history.html', history=history, pages=pages, current_page=current_page)
 	else:
 		return render_template('index.html')
 
