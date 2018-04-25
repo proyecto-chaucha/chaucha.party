@@ -10,7 +10,7 @@ def index():
 		balance = getbalance(session['address'])
 		return render_template('home.html', balance=balance)
 	else:
-		return render_template('index.html')
+		return redirect(url_for('login'))
 
 @app.route('/paper')
 def paper():

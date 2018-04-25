@@ -2,7 +2,10 @@
 {% block body %}
 
 <h1 class="title">Enviar Chauchas</h1>
-<p class="subtitle mono">Tienes {{ balance[0]|round(8) }} CHA disponibles para transferir</p>
+
+<div class="content is-medium">
+	<p>Tienes {{ balance[0]|round(8) }} chauchas disponibles para transferir</p>
+</div>
 
 <form action="/send" method="post">
 
@@ -86,7 +89,7 @@ function openQRCamera(node) {
     node.value = "";
     qrcode.callback = function(res) {
       if(res instanceof Error) {
-        alert("No QR code found. Please make sure the QR code is within the camera's frame and try again.");
+        alert("Error, intentalo nuevamente");
       } else {
 	    $('#address').attr('value', res);
       }

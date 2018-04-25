@@ -53,10 +53,10 @@ particlesJS("particle",{particles:{number:{value:60,density:{enable:!0,value_are
 		</div>
 		<div id='nav-menu' class="navbar-menu" v-on:click="toggleNav">
 			<div class="navbar-end">
+			{% if 'address' in session %}
 			<a class="navbar-item" href="{{ url_for('index') }}">
 				Página Principal
 			</a>
-			{% if 'address' in session %}
 			<a class="navbar-item" href="{{ url_for('send') }}">
 				Enviar
 			</a>
@@ -71,7 +71,7 @@ particlesJS("particle",{particles:{number:{value:60,density:{enable:!0,value_are
 				Iniciar Sesión
 			</a>
 			<a class="navbar-item" href="{{ url_for('paper') }}">
-				Registro
+				Paper Wallet
 			</a>
 			{% endif %}
 			</div>

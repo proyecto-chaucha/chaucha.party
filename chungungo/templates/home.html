@@ -6,11 +6,16 @@
 <p class="mono">
 	{{ session['address'] }}
 </p>
+
 <br>
-<h2 class="title is-4">Balance: {{ balance[0]|round(8) }} CHA<br>
-	{% if not balance[1] == 0 %}
-		Sin confirmar: {{ balance[1]|round(8) }} CHA
-	{% endif %}
-</h2>
+
+<div class="content is-medium">
+<p><b>Balance:</b> {{ balance[0]|round(8) }} CHA</p>
+
+{% if not balance[1] == 0 %}
+	<p><b>Sin confirmar:</b> {{ balance[1]|round(8) }} CHA</p>
+{% endif %}
+
+</div>
 
 {% endblock %}

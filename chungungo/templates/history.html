@@ -2,6 +2,9 @@
 {% block body %}
 
 <h1 class="title">Historial de Transacciones</h1>
+
+{% if history|length > 0 %}
+
 <p class="subtitle mono">
 {% if not current_page == 0 %}
 <a href="{{ url_for('history') }}?page={{ current_page }}" class="has-text-danger">
@@ -18,14 +21,13 @@ Página {{ current_page + 1 }} de {{ pages }}
 {% endif %}
 </p> 
 
-{% if history|length > 0 %}
 <table class="table bg mono is-hoverable is-fullwidth">
 	<thead>
 		<tr class="has-text-centered">
 			<th class="has-text-centered">Fecha</th>
 			<th class="has-text-centered is-hidden-touch">Confirmaciones</th>
 			<th class="has-text-centered">Mensaje</th>
-			<th class="has-text-centered">Block Explorer</th>
+			<th class="has-text-centered">Insight</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -47,7 +49,10 @@ Página {{ current_page + 1 }} de {{ pages }}
 </table>
 
 {% else %}
-<p>No tienes transacciones anteriores</p>
+<div class="content is-medium">
+	<p>No tienes transacciones anteriores</p>
+</div>
+
 {% endif %}
 
 {% endblock %}

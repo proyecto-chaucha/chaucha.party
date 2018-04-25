@@ -3,8 +3,13 @@
 
 <h1 class="title">Iniciar sesión</h1>
 
-<form action="/login" method="post">
+<div class="content is-medium">
+	<p>Para utilizar esta plataforma necesitas una <b>Llave Privada</b>, que puedes obtener generando una <a href="{{ url_for('paper') }}" class="has-text-black"><u>Paper Wallet</u></a> aleatoria, o <a href="https://docs.chaucha.cl/aportes/principiante/sec/" target="_blank" class="has-text-black"><u>exportando</u></a> una llave privada de alguna dirección de tu Chauchera.</p>
 
+	<p>Puedes ingresar tu llave privada escaneando el código QR con el botón <i class="fas fa-qrcode fa-lg"></i></p>
+</div>
+
+<form action="/login" method="post">
 
 <div class="field is-horizontal">
 	<div class="field-label is-large">
@@ -55,7 +60,7 @@ function openQRCamera(node) {
     node.value = "";
     qrcode.callback = function(res) {
       if(res instanceof Error) {
-        alert("No QR code found. Please make sure the QR code is within the camera's frame and try again.");
+        alert("Error, intentalo nuevamente");
       } else {
 	    $('#privkey').attr('value', res);
       }
