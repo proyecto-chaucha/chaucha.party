@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block body %}
 
+{% from "macros.html" import render_qr, render_field %}
+
 <h1 class="title">Enviar Chauchas</h1>
 
 <div class="content is-medium">
@@ -8,66 +10,10 @@
 </div>
 
 <form action="/send" method="post">
-
-<div class="field is-horizontal">
-	<div class="field-label is-large">
-		<label class="label">Dirección</label>
-	</div>
-	<div class="field-body">
-		<div class="field has-addons">
-			<div class="control is-expanded has-icons-left">
-				<input class="input is-large is-primary" id="address" type="text" name="address">
-				<span class="icon is-left">
-					<i class="fas fa-key"></i>
-				</span>
-			</div>
-			<div class="control">
-				<div class="file is-primary is-large">
-					<label class="file-label">
-						<input class="file-input" type=file accept="image/*" capture=environment onchange="openQRCamera(this);">
-						<span class="file-cta">
-							<span class="file-icon">
-								<i class="fas fa-qrcode fa-2x"></i>
-							</span>
-						</span>
-					</label>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="field is-horizontal">
-	<div class="field-label is-large">
-		<label class="label">Monto</label>
-	</div>
-	<div class="field-body">
-		<div class="field">
-			<p class="control has-icons-left">
-				<input class="input is-large is-primary" type="text" name="amount">
-				<span class="icon is-left">
-					<i class="fas fa-dollar-sign"></i>
-				</span>
-			</p>
-		</div>
-	</div>
-</div>
-
-<div class="field is-horizontal">
-	<div class="field-label is-large">
-		<label class="label">Mensaje</label>
-	</div>
-	<div class="field-body">
-		<div class="field">
-			<p class="control has-icons-left">
-				<input class="input is-large is-primary" type="text" name="msg">
-				<span class="icon is-left">
-					<i class="fas fa-comments"></i>
-				</span>
-			</p>
-		</div>
-	</div>
-</div>
+{{ form.csrf_token }}
+{{ render_qr(form.address, class="input is-large is-primary") }}
+{{ render_field(form.amount, class="input is-large is-primary", icon="fas fa-dollar-sign") }}
+{{ render_field(form.msg, class="input is-large is-primary", icon="fas fa-comments") }}
 
 <div class="field">
 	<p class="control">

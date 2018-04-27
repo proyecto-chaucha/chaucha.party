@@ -1,7 +1,9 @@
 from flask import render_template, redirect, url_for, request, session, flash, Markup
+from flask_babel import gettext
 from chungungo import app
 from chungungo.validator import check_bc
 from chungungo.network import *
+from chungungo.forms import *
 from os import urandom
 
 @app.route('/')
@@ -38,58 +40,58 @@ def history():
 		return render_template('index.html')
 
 
-@app.route('/send', methods=['get','POST'])
+@app.route('/send', methods=['GET','POST'])
 def send():
 	if 'address' in session:
+		form = sendform(request.form)
 		balance = getbalance(session['address'])
 
-		if request.method == 'POST':
+		if form.validate_on_submit():
+
 			address = session['address']
 			privkey = session['privkey']
 
-			try:
-				receptor = request.form['address']
-				op_return = request.form['msg']
-				amount = float(request.form['amount'])
+			receptor = request.form['address']
+			op_return = request.form['msg']
+			amount = float(request.form['amount'])
 
-				verify = check_bc(receptor)
+			verify = check_bc(receptor)
 
-				if not len(op_return) > 0 or len(op_return) <= 255:
-					if verify and receptor.startswith('c'):
-						unspent = getunspent(address, amount)
+			if verify and receptor.startswith('c'):
+				unspent = getunspent(address, amount)
 
-						if amount <= unspent['used'] and amount > 0:
-							msg = broadcast(session, unspent, amount, receptor, op_return)
+				if amount <= unspent['used']:
+					msg = broadcast(session, unspent, amount, receptor, op_return)
 
-							try:
-								flash('Transacción enviada', 'is-primary')
-							except:
-								msg = broadcasting.text
-								flash(Markup('ERROR<br>%s' % msg), 'is-danger')
-							
-							return redirect(url_for('index'))
+					try:
+						flash('Transacción enviada', 'is-primary')
+					except:
+						msg = broadcasting.text
+						flash(Markup('ERROR<br>%s' % msg), 'is-danger')
+					
+					return redirect(url_for('index'))
 
-						else:
-							flash('Saldo insuficiente o inválido', 'is-danger')
-					else:
-						flash('dirección inválida', 'is-danger')
 				else:
-					flash('Ingresa un mensaje', 'is-danger')
-			except ValueError:
-				flash('Ingresa valores válidos', 'is-danger')
-		
+					flash('Monto - Saldo insuficiente', 'is-danger')
+			else:
+				flash('Dirección - Error de formato', 'is-danger')
+			
+	
 			return redirect(url_for('send'))
 		else:
-			return render_template('send.html', balance=balance)
+			flash_errors(form)
+			return render_template('send.html', balance=balance, form=form)
 	else:
 		return redirect(url_for('index'))
 
 
 
-@app.route('/login', methods=['get','POST'])
+@app.route('/login', methods=['GET','POST'])
 def login():
-	if request.method == 'POST':
-		privkey = request.form['privkey']
+	form = privkeyform(request.form)
+	if form.validate_on_submit():
+
+		privkey = form.privkey.data
 
 		try:
 			address = privtoaddr(privkey, 88)
@@ -98,9 +100,10 @@ def login():
 			return redirect(url_for('index'))
 		
 		except:
-			flash('Llave privada erronea', 'is-danger')
-
-	return render_template('login.html')
+			flash('Llave Privada - Error de formato', 'is-danger')
+	else:
+		flash_errors(form)
+	return render_template('login.html', form=form)
 
 
 @app.route('/logout')

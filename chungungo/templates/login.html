@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block body %}
 
+{% from "macros.html" import render_qr, render_field %}
+
 <h1 class="title">Iniciar sesión</h1>
 
 <div class="content is-medium">
@@ -10,34 +12,8 @@
 </div>
 
 <form action="/login" method="post">
-
-<div class="field is-horizontal">
-	<div class="field-label is-large">
-		<label class="label">Llave privada</label>
-	</div>
-	<div class="field-body">
-		<div class="field has-addons">
-			<div class="control is-expanded has-icons-left">
-				<input class="input is-large is-primary" id="privkey" type="password" name="privkey">
-				<span class="icon is-left">
-					<i class="fas fa-key"></i>
-				</span>
-			</div>
-			<div class="control">
-				<div class="file is-primary is-large">
-					<label class="file-label">
-						<input class="file-input" type=file accept="image/*" capture=environment onchange="openQRCamera(this);">
-						<span class="file-cta">
-							<span class="file-icon">
-								<i class="fas fa-qrcode fa-2x"></i>
-							</span>
-						</span>
-					</label>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+  {{ form.csrf_token }}
+  {{ render_qr(form.privkey, class="input is-large is-primary") }}
 
 <div class="field">
 	<p class="control">

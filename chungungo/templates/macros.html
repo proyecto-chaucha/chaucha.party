@@ -1,0 +1,41 @@
+{% macro render_qr(field) %}
+
+<div class="field is-horizontal">
+	<div class="field-label is-large">
+		<label class="label">{{ field.label }}</label>
+	</div>
+	<div class="field-body">
+		<div class="field has-addons">
+			<div class="control is-expanded">
+				{{ field(**kwargs)|safe }}
+			</div>
+			<div class="control">
+				<div class="file is-primary is-large">
+					<label class="file-label">
+						<input class="file-input" type=file accept="image/*" capture=environment onchange="openQRCamera(this);">
+						<span class="file-cta">
+							<span class="file-icon">
+								<i class="fas fa-qrcode fa-2x"></i>
+							</span>
+						</span>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endmacro %}
+
+{% macro render_field(field) %}
+<div class="field is-horizontal">
+	<div class="field-label is-large">
+		<label class="label">{{ field.label }}</label>
+	</div>
+	<div class="field-body">
+		<div class="field">
+			{{ field(**kwargs)|safe }}
+		</div>
+	</div>
+</div>
+{% endmacro %}
