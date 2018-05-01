@@ -16,11 +16,12 @@ def index():
 
 @app.route('/tx/<txid>')
 def tx(txid):
-	if 'address' in session:
+	try:
 		tx = gettx(txid)
 		return render_template('tx_viewer.html', tx=tx)
-	else:
-		return redirect(url_for('login'))
+	except:
+		flash('Error de lectura de transacción')
+		return redirect(url_for('index'))
 
 @app.route('/paper')
 def paper():
