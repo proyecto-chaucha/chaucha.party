@@ -14,6 +14,14 @@ def index():
 	else:
 		return redirect(url_for('login'))
 
+@app.route('/tx/<txid>')
+def tx(txid):
+	if 'address' in session:
+		tx = gettx(txid)
+		return render_template('tx_viewer.html', tx=tx)
+	else:
+		return redirect(url_for('login'))
+
 @app.route('/paper')
 def paper():
 	rand_string = urandom(2048)

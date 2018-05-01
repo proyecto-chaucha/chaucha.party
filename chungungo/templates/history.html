@@ -21,13 +21,13 @@ Página {{ current_page + 1 }} de {{ pages }}
 {% endif %}
 </p> 
 
-<table class="table bg mono is-hoverable is-fullwidth">
+<table class="table bg mono is-hoverable center">
 	<thead>
 		<tr class="has-text-centered">
 			<th class="has-text-centered">Fecha</th>
 			<th class="has-text-centered is-hidden-touch">Confirmaciones</th>
 			<th class="has-text-centered">Mensaje</th>
-			<th class="has-text-centered">Insight</th>
+			<th class="has-text-centered"></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -36,12 +36,16 @@ Página {{ current_page + 1 }} de {{ pages }}
 			<td class="has-text-centered">{{ tx['time'] }}</td>
 			<td class="has-text-centered is-hidden-touch">{{ tx['confirmations'] }}</td>
 			{% if tx['msg']|length > 0 %}
-				<td class="has-text-centered">{{ tx['msg'] }}</td>
+				{% if tx['msg']|length > 25 %}
+					<td class="has-text-centered">{{ tx['msg'][:25] }}...</td>
+				{% else %}
+					<td class="has-text-centered">{{ tx['msg'] }}</td>
+				{% endif %}
 			{% else %}
 				<td class="has-text-centered">&nbsp;</td>
 			{% endif %}
 			<td class="has-text-centered">
-				<a href="http://insight.chaucha.cl/tx/{{ tx['txid'] }}" class="has-text-primary" target="_blank"><u>Ver TX</u></a>
+				<a href="{{ url_for('tx', txid=tx['txid']) }}" class="has-text-primary"><u>Ver Transacción</u></a>
 			</td>
 		</tr>
 		{% endfor %}

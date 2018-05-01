@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="columns">
+	<div class="column has-text-centered">
+		<h1 class="title">Entradas</h1>
+
+		<table class="table center bg mono is-hoverable is-fullwidth">
+			<thead>
+				<tr class="has-text-centered">
+					<th class="has-text-centered">Dirección</th>
+					<th class="has-text-centered">Monto</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for i in tx['vin'] %}
+				<tr>
+					<td class="has-text-centered">{{ i['addr'] }}</td>
+					<td class="has-text-centered">{{ i['value'] }}</td>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<div class="column">
+		<h1 class="title">Salidas</h1>
+		<table class="table center bg mono is-hoverable is-fullwidth">
+			<thead>
+				<tr class="has-text-centered">
+					<th class="has-text-centered">Dirección</th>
+					<th class="has-text-centered">Monto</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for j in tx['vout'] %}
+				<tr>
+					{% if 'addresses' in j['scriptPubKey'] %}
+					<td class="has-text-centered">{{ j['scriptPubKey']['addresses'][0] }}</td>
+					<td class="has-text-centered">{{ j['value'] }}</td>
+					{% endif %}
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

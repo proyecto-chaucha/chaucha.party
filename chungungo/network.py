@@ -8,6 +8,10 @@ magic = 88
 fee = 0.001
 satoshi = 100000000
 
+def gettx(txid):
+	tx = get('https://explorer.cha.terahash.cl/api/tx/' + txid).json()
+	return tx
+
 def gethistory(addr, page=0):
 	history = get('https://explorer.cha.terahash.cl/api/txs/?address=' + addr + '&pageNum=' + str(page)).json()
 	txs = []
