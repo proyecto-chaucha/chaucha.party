@@ -20,7 +20,7 @@ def tx(txid):
 		tx = gettx(txid)
 		return render_template('tx_viewer.html', tx=tx)
 	except:
-		flash('Error de lectura de transacción')
+		flash('Error de lectura de transacción', 'is-danger')
 		return redirect(url_for('index'))
 
 @app.route('/paper')
