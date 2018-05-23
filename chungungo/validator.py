@@ -3,7 +3,7 @@
 from hashlib import sha256
 
 digits58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
- 
+
 def decode_base58(bc, length):
     n = 0
     for char in bc:

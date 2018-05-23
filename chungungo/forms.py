@@ -12,6 +12,6 @@ class privkeyform(FlaskForm):
 	privkey = PasswordField('Llave privada', validators=[DataRequired()])
 
 class sendform(FlaskForm):
-	address = StringField('Dirección', validators=[DataRequired()])
+	address = StringField('Dirección',validators=[DataRequired()])
 	amount = FloatField('Monto', validators=[DataRequired(), NumberRange(0.001)])
 	msg = StringField('Mensaje', validators=[DataRequired(), Length(1,255)])

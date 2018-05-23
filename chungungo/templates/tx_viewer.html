@@ -34,13 +34,13 @@
 			</thead>
 			<tbody>
 				{% for j in tx['vout'] %}
+				{% if 'addresses' in j['scriptPubKey'] %}
 				<tr>
-					{% if 'addresses' in j['scriptPubKey'] %}
 					<td class="has-text-centered">{{ j['scriptPubKey']['addresses'][0] }}</td>
 					<td class="has-text-centered">{{ j['value'] }}</td>
-					{% endif %}
 					</td>
 				</tr>
+				{% endif %}
 				{% endfor %}
 			</tbody>
 		</table>

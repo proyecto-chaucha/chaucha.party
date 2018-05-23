@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for, request, session, flash, Markup
 from flask_babel import gettext
-from chungungo import app
-from chungungo.validator import check_bc
+from chungungo.validator import *
 from chungungo.network import *
 from chungungo.forms import *
+from chungungo import app
 from os import urandom
 
 @app.route('/')
@@ -40,9 +40,7 @@ def history():
 		else:
 			current_page = 0
 
-		info = gethistory(session['address'], current_page)
-		history = info[0]
-		pages = info[1]
+		history, pages = gethistory(session['address'], current_page)
 
 		return render_template('history.html', history=history, pages=pages, current_page=current_page)
 	else:
@@ -67,7 +65,7 @@ def send():
 			verify = check_bc(receptor)
 
 			if verify and receptor.startswith('c'):
-				unspent = getunspent(address, amount)
+				unspent = getbalance(address, amount)
 
 				if amount <= unspent['used']:
 					msg = broadcast(session, unspent, amount, receptor, op_return)
@@ -77,15 +75,15 @@ def send():
 					except:
 						msg = broadcasting.text
 						flash(Markup('ERROR<br>%s' % msg), 'is-danger')
-					
+
 					return redirect(url_for('index'))
 
 				else:
 					flash('Monto - Saldo insuficiente', 'is-danger')
 			else:
 				flash('Dirección - Error de formato', 'is-danger')
-			
-	
+
+
 			return redirect(url_for('send'))
 		else:
 			flash_errors(form)
@@ -107,7 +105,7 @@ def login():
 			session['address'] = address
 			session['privkey'] = privkey
 			return redirect(url_for('index'))
-		
+
 		except:
 			flash('Llave Privada - Error de formato', 'is-danger')
 	else:

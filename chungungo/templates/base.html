@@ -10,7 +10,7 @@
 
 	<meta name="description" content="Proyecto Chaucha - 2018">
 	<meta name="keywords" content="chaucha, cryptocurrency, chauchera">
-	<meta name="author" content="César Vásquez C.">	
+	<meta name="author" content="César Vásquez C.">
 	<script type="text/javascript" src="{{ url_for('static', filename='particles.min.js') }}"></script>
 	<style type="text/css">
 	@import url('https://fonts.googleapis.com/css?family=Quicksand|Source+Code+Pro');
@@ -27,7 +27,7 @@
 		right:0;
 		bottom:0;
 		left:0;
-		z-index:0; 
+		z-index:0;
 	}
 	</style>
 </head>
@@ -52,18 +52,26 @@ particlesJS("particle",{particles:{number:{value:60,density:{enable:!0,value_are
 			<span></span>
 			</span>
 		</div>
-		<div id='nav-menu' class="navbar-menu" v-on:click="toggleNav">
+		<div id='nav-menu' class="navbar-menu is-transparent" v-on:click="toggleNav">
 			<div class="navbar-end">
 			{% if 'address' in session %}
-			<a class="navbar-item" href="{{ url_for('index') }}">
-				Página Principal
-			</a>
-			<a class="navbar-item" href="{{ url_for('send') }}">
-				Enviar
-			</a>
-			<a class="navbar-item" href="{{ url_for('history') }}">
-				Historial
-			</a>
+			<div class="navbar-item has-dropdown is-hoverable">
+				<a class="navbar-link">
+					Chauchera
+				</a>
+				<div class="navbar-dropdown">
+					<a class="navbar-item" href="{{ url_for('send') }}">
+						Enviar
+					</a>
+					<a class="navbar-item" href="{{ url_for('index') }}">
+						Recibir
+					</a>
+					<a class="navbar-item" href="{{ url_for('history') }}">
+						Historial
+					</a>
+				</div>
+			</div>
+
 			<a class="navbar-item" href="{{ url_for('logout') }}">
 				Cerrar Sesión
 			</a>
