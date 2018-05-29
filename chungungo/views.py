@@ -1,4 +1,5 @@
-from flask import render_template, redirect, url_for, request, session, flash, Markup
+from flask import render_template, redirect, url_for, request, \
+                  session, flash, Markup
 from flask_babel import gettext
 from chungungo.validator import *
 from chungungo.network import *
@@ -42,7 +43,10 @@ def history():
 
         history, pages = gethistory(session['address'], current_page)
 
-        return render_template('history.html', history=history, pages=pages, current_page=current_page)
+        return render_template('history.html',
+                                history=history,
+                                pages=pages,
+                                current_page=current_page)
     else:
         return render_template('index.html')
 
@@ -54,7 +58,6 @@ def send():
         balance = getbalance(session['address'])
 
         if form.validate_on_submit():
-
             address = session['address']
             privkey = session['privkey']
 
@@ -68,18 +71,22 @@ def send():
                 unspent = getbalance(address, amount)
 
                 if amount <= unspent['used']:
-                    msg = broadcast(session, unspent, amount, receptor, op_return)
+                    msg_raw = broadcast(session, unspent, amount,
+                                        receptor, op_return)
 
                     try:
-                        flash('Transacción enviada', 'is-primary')
+                        msg = msg_raw.json()
+                        flash(Markup('Transacción transmitida a la Red<br>'
+                                     + msg['txid']), 'is-primary')
                     except:
-                        msg = broadcasting.text
-                        flash(Markup('ERROR<br>%s' % msg), 'is-danger')
+                        msg = msg_raw.text
+                        flash(Markup('Error de transmisión<br>'
+                                     + msg), 'is-danger')
 
                     return redirect(url_for('index'))
 
                 else:
-                    flash('Monto - Saldo insuficiente', 'is-danger')
+                    flash('Saldo insuficiente', 'is-danger')
             else:
                 flash('Dirección - Error de formato', 'is-danger')
 

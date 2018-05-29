@@ -1,6 +1,6 @@
 from requests import get, post
 from bitcoin import *
-import binascii
+from binascii import a2b_hex, b2a_hex
 import time
 
 # Network
@@ -29,12 +29,12 @@ def gethistory(addr, page=0):
                 else:
                     sub_script = hex_script[6:]
 
-                msg_str = binascii.a2b_hex(sub_script)
+                msg = a2b_hex(sub_script).decode('utf-8', errors='ignore')
 
         tx = {'confirmations' : i['confirmations'],
               'txid' : i['txid'],
               'time' : date,
-              'msg' : msg_str.decode('utf-8', errors='ignore')}
+              'msg' : msg}
 
         txs.append(tx)
     pages = history['pagesTotal']
@@ -74,6 +74,8 @@ def getbalance(addr, sendamount=0):
 
 
 def broadcast(session, unspent, amount, receptor, op_return):
+    global fee, satoshi, magic
+
     # Parametros de session
     addr = session['address']
     privkey = session['privkey']
@@ -107,9 +109,8 @@ def broadcast(session, unspent, amount, receptor, op_return):
     # OP_RETURN
     if len(op_return) > 0 and len(op_return) <= 255:
         payload = OP_RETURN_payload(op_return)
-        hex_p = binascii.b2a_hex(payload).decode('utf-8', errors='ignore')
+        hex_p = b2a_hex(payload).decode('utf-8', errors='ignore')
         script = '6a' + hex_p
-
         outputs.append({'value' : 0, 'script' : script})
 
     # creación de transacción
@@ -128,12 +129,12 @@ def OP_RETURN_payload(string):
     metadata = bytes(string, 'utf-8')
     metadata_len = len(metadata)
 
-    if metadata_len<=75:
-        payload = bytearray((metadata_len,))
-    elif metadata_len<=256:
-        payload = b"\x4c" + bytearray((metadata_len,))
+    if metadata_len <= 75:
+        payload = bytearray((metadata_len, ))
+    elif metadata_len <= 256:
+        payload = b"\x4c" + bytearray((metadata_len, ))
     else:
-        payload = b"\x4d" + bytearray((metadata_len%256,))
-        payload += bytearray((int(metadata_len/256),))
+        payload = b"\x4d" + bytearray((metadata_len % 256, ))
+        payload += bytearray((int(metadata_len / 256), ))
 
     return payload + metadata
