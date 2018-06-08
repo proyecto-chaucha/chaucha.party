@@ -5,7 +5,7 @@ import time
 
 # Network
 magic = 88
-fee = 0.001
+fee = 0.00045
 satoshi = 100000000
 
 def gettx(txid):
@@ -88,7 +88,7 @@ def broadcast(session, unspent, amount, receptor, op_return):
     inputs = unspent['inputs']
 
     # Calculo de fee
-    used_fee = int(fee*satoshi*(len(inputs)/5 + 1))
+    used_fee = int(fee*satoshi*len(inputs))
 
     # Output
     outputs = []
