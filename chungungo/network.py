@@ -3,17 +3,12 @@ from bitcoin import *
 from binascii import a2b_hex, b2a_hex
 import time
 
-# Network
-magic = 88
-fee = 0.00045
-satoshi = 100000000
-
 def gettx(txid):
-    url = 'https://explorer.cha.terahash.cl/api/tx/'
+    url = 'http://insight.chaucha.cl/api/tx/'
     return get(url + txid).json()
 
 def gethistory(addr, page=0):
-    url = 'https://explorer.cha.terahash.cl/api/txs/?address='
+    url = 'http://insight.chaucha.cl/api/txs/?address='
     history = get(url + addr + '&pageNum=' + str(page)).json()
 
     txs = []
@@ -42,7 +37,7 @@ def gethistory(addr, page=0):
 
 def getbalance(addr, sendamount=0):
     # Captura de balance por tx sin gastar
-    url = 'https://explorer.cha.terahash.cl/api/addr/'
+    url = 'http://insight.chaucha.cl/api/addr/'
     unspent = get(url + addr + '/utxo').json()
 
     # Variables auxiliares
@@ -74,21 +69,25 @@ def getbalance(addr, sendamount=0):
 
 
 def broadcast(session, unspent, amount, receptor, op_return):
-    global fee, satoshi, magic
+    # Network
+    magic = 88
+    base_fee = 0.000452
+    fee_per_input = 0.000296
+    COIN = 100000000
 
     # Parametros de session
     addr = session['address']
     privkey = session['privkey']
 
     # Transformar valores a Chatoshis
-    used_amount = int(amount*satoshi)
-    used_unspent = int(unspent['used']*satoshi)
+    used_amount = int(amount*COIN)
+    used_unspent = int(unspent['used']*COIN)
 
     # Input
     inputs = unspent['inputs']
 
     # Calculo de fee
-    used_fee = int(fee*satoshi*len(inputs))
+    used_fee = int((base_fee + fee_per_input*len(inputs))*COIN)
 
     # Output
     outputs = []
@@ -120,7 +119,7 @@ def broadcast(session, unspent, amount, receptor, op_return):
     for i in range(len(inputs)):
         tx = sign(tx, i, privkey)
 
-    url = 'https://explorer.cha.terahash.cl/api/tx/send'
+    url = 'http://insight.chaucha.cl/api/tx/send'
     broadcasting = post(url, data={'rawtx' : tx})
 
     return broadcasting
