@@ -26,9 +26,8 @@ def tx(txid):
 
 @app.route('/paper')
 def paper():
-    magic = 88
-    privkey = encode_privkey(random_key(), 'wif', magic)
-    address = privtoaddr(privkey, magic)
+    privkey = encode_privkey(random_key(), 'wif', 88)
+    address = privtoaddr(privkey, 88)
     wallet = {'address' : address, 'privkey' : privkey}
     return render_template('wallet.html', wallet=wallet)
 
