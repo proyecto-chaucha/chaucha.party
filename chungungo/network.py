@@ -15,7 +15,7 @@ def gethistory(addr, page=0):
     for i in history['txs']:
         actual = time.localtime(int(i['time']))
         date = time.strftime('%d.%m.%Y %H:%M:%S', actual)
-        msg_str = ''
+        msg = ''
         for j in i['vout']:
             hex_script = j['scriptPubKey']['hex']
             if hex_script.startswith('6a'):
