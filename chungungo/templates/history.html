@@ -36,13 +36,12 @@
 	</tbody>
 </table>
 
+{% if not current_page == 0 %}
 <div class="content is-medium">
 	<p>
-	{% if not current_page == 0 %}
 	<a href="{{ url_for('history') }}?page={{ current_page }}" class="has-text-primary">
 		<i class="fa fa-lg fa-caret-left" aria-hidden="true"></i>
 	</a>
-	{% endif %}
 
 	{{ current_page + 1 }} de {{ pages }}
 
@@ -53,6 +52,7 @@
 	{% endif %}
 	</p>
 </div>
+{% endif %}
 
 {% else %}
 <div class="content is-medium">
