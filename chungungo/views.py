@@ -18,10 +18,9 @@ def index():
 @app.route('/tx/<txid>')
 def tx(txid):
     try:
-        tx = gettx(txid)
-        return render_template('tx_viewer.html', tx=tx)
+        return render_template('tx_viewer.html', tx=gettx(txid))
     except:
-        flash('Error de lectura de transacción', 'is-danger')
+        flash('Error de lectura', 'is-danger')
         return redirect(url_for('index'))
 
 @app.route('/paper')
@@ -62,20 +61,17 @@ def send():
 
             receptor = request.form['address']
             op_return = request.form['msg']
-            amount = float(request.form['amount'])
+            amount = round(float(request.form['amount']), 8)
 
-            verify = check_bc(receptor)
-
-            if verify and receptor.startswith('c'):
+            if check_bc(receptor):
                 unspent = getbalance(address, amount)
 
                 if amount <= unspent['used']:
                     msg_raw = broadcast(session, unspent, amount,
                                         receptor, op_return)
-
                     try:
                         msg = msg_raw.json()
-                        flash(Markup('Transacción transmitida a la Red<br>'
+                        flash(Markup('Transacción enviada exitosamente<br>'
                                      + msg['txid']), 'is-primary')
                     except:
                         msg = msg_raw.text
@@ -88,7 +84,6 @@ def send():
                     flash('Saldo insuficiente', 'is-danger')
             else:
                 flash('Dirección - Error de formato', 'is-danger')
-
 
             return redirect(url_for('send'))
         else:
@@ -103,7 +98,6 @@ def send():
 def login():
     form = privkeyform(request.form)
     if form.validate_on_submit():
-
         privkey = form.privkey.data
 
         try:
