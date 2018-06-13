@@ -5,23 +5,7 @@
 
 {% if history|length > 0 %}
 
-<p class="subtitle mono">
-{% if not current_page == 0 %}
-<a href="{{ url_for('history') }}?page={{ current_page }}" class="has-text-danger">
-	<i class="fa fa-lg fa-caret-left" aria-hidden="true"></i>
-</a>
-{% endif %}
-
-Página {{ current_page + 1 }} de {{ pages }}
-
-{% if not current_page + 1 == pages %}
-<a href="{{ url_for('history') }}?page={{ current_page + 2 }}" class="has-text-danger">
-	<i class="fa fa-lg fa-caret-right" aria-hidden="true"></i>
-</a>
-{% endif %}
-</p> 
-
-<table class="table bg mono is-hoverable center">
+<table class="table bg is-hoverable center">
 	<thead>
 		<tr class="has-text-centered">
 			<th class="has-text-centered">Fecha</th>
@@ -51,6 +35,24 @@ Página {{ current_page + 1 }} de {{ pages }}
 		{% endfor %}
 	</tbody>
 </table>
+
+<div class="content is-medium">
+	<p>
+	{% if not current_page == 0 %}
+	<a href="{{ url_for('history') }}?page={{ current_page }}" class="has-text-primary">
+		<i class="fa fa-lg fa-caret-left" aria-hidden="true"></i>
+	</a>
+	{% endif %}
+
+	{{ current_page + 1 }} de {{ pages }}
+
+	{% if not current_page + 1 == pages %}
+	<a href="{{ url_for('history') }}?page={{ current_page + 2 }}" class="has-text-primary">
+		<i class="fa fa-lg fa-caret-right" aria-hidden="true"></i>
+	</a>
+	{% endif %}
+	</p>
+</div>
 
 {% else %}
 <div class="content is-medium">

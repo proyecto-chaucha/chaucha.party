@@ -5,7 +5,7 @@
 	<div class="column has-text-centered">
 		<h1 class="title">Entradas</h1>
 
-		<table class="table center bg mono is-hoverable is-fullwidth">
+		<table class="table center bg is-hoverable is-fullwidth">
 			<thead>
 				<tr class="has-text-centered">
 					<th class="has-text-centered">Dirección</th>
@@ -14,18 +14,26 @@
 			</thead>
 			<tbody>
 				{% for i in tx['vin'] %}
+				{% if not tx['isCoinBase'] %}
 				<tr>
 					<td class="has-text-centered">{{ i['addr'] }}</td>
-					<td class="has-text-centered">{{ i['value'] }}</td>
+					<td class="has-text-centered">{{ i['value'] }} CHA</td>
 					</td>
 				</tr>
+				{% else %}
+				<tr>
+					<td class="has-text-centered">Generación</td>
+					<td class="has-text-centered">{{ tx['valueOut'] }} CHA</td>
+					</td>
+				</tr>
+				{% endif %}
 				{% endfor %}
 			</tbody>
 		</table>
 	</div>
 	<div class="column">
 		<h1 class="title">Salidas</h1>
-		<table class="table center bg mono is-hoverable is-fullwidth">
+		<table class="table center bg is-hoverable is-fullwidth">
 			<thead>
 				<tr class="has-text-centered">
 					<th class="has-text-centered">Dirección</th>
@@ -37,7 +45,7 @@
 				{% if 'addresses' in j['scriptPubKey'] %}
 				<tr>
 					<td class="has-text-centered">{{ j['scriptPubKey']['addresses'][0] }}</td>
-					<td class="has-text-centered">{{ j['value'] }}</td>
+					<td class="has-text-centered">{{ j['value'] }} CHA</td>
 					</td>
 				</tr>
 				{% endif %}
@@ -46,4 +54,9 @@
 		</table>
 	</div>
 </div>
+{% if 'fees' in tx %}
+<div class="content is-medium">
+	<p><b>Impuesto:</b> {{ tx['fees'] }} CHA</p>
+</div>
+{% endif %}
 {% endblock %}
