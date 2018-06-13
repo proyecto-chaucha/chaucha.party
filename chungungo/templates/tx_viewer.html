@@ -16,7 +16,8 @@
 				{% for i in tx['vin'] %}
 				{% if not tx['isCoinBase'] %}
 				<tr>
-					<td class="has-text-centered">{{ i['addr'] }}</td>
+					<td class="has-text-centered is-hidden-touch">{{ i['addr'] }}</td>
+					<td class="has-text-centered is-hidden-desktop">{{ i['addr'][:15] }}...</td>
 					<td class="has-text-centered">{{ i['value'] }} CHA</td>
 					</td>
 				</tr>
@@ -44,7 +45,8 @@
 				{% for j in tx['vout'] %}
 				{% if 'addresses' in j['scriptPubKey'] %}
 				<tr>
-					<td class="has-text-centered">{{ j['scriptPubKey']['addresses'][0] }}</td>
+					<td class="has-text-centered is-hidden-touch">{{ j['scriptPubKey']['addresses'][0] }}</td>
+					<td class="has-text-centered is-hidden-desktop">{{ j['scriptPubKey']['addresses'][0][:15] }}...</td>
 					<td class="has-text-centered">{{ j['value'] }} CHA</td>
 					</td>
 				</tr>
