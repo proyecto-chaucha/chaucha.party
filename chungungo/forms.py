@@ -12,6 +12,13 @@ class privkeyform(FlaskForm):
     privkey = PasswordField('Llave privada', validators=[DataRequired()])
 
 class sendform(FlaskForm):
-    address = StringField('Dirección',validators=[DataRequired()])
+    address = StringField('Destinatario',validators=[DataRequired()])
     amount = FloatField('Monto', validators=[DataRequired(), NumberRange(0.001)])
     msg = StringField('Mensaje', validators=[DataRequired(), Length(1,255)])
+
+class hodlcreateform(FlaskForm):
+    locktime = FloatField('Locktime', validators=[DataRequired()])
+
+class hodlspendform(FlaskForm):
+    address = StringField('Destinatario', validators=[DataRequired()])
+    script = StringField('Llave', validators=[DataRequired()])

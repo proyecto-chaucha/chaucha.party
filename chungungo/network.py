@@ -1,11 +1,22 @@
+from chungungo.functions import *
 from requests import get, post
-from bitcoin import *
-from binascii import a2b_hex, b2a_hex
-import time
+from binascii import a2b_hex
+from time import localtime, strftime
 
-def gettx(txid):
-    url = 'http://insight.chaucha.cl/api/tx/'
-    return get(url + txid).json()
+def broadcast(tx):
+    url = 'http://insight.chaucha.cl/api/tx/send'
+    broadcasting = post(url, data={'rawtx' : tx})
+
+    return broadcasting
+
+
+def checklocktime(script):
+    url = 'http://insight.chaucha.cl/api/status?getInfo'
+    last_block = get(url).json()['info']['blocks']
+    locktime = getlocktime(script)
+
+    return int(last_block) >= int(locktime)
+
 
 def gethistory(addr, page=0):
     url = 'http://insight.chaucha.cl/api/txs/?address='
@@ -13,8 +24,8 @@ def gethistory(addr, page=0):
 
     txs = []
     for i in history['txs']:
-        actual = time.localtime(int(i['time']))
-        date = time.strftime('%d.%m.%Y %H:%M:%S', actual)
+        actual = localtime(int(i['time']))
+        date = strftime('%d.%m.%Y %H:%M:%S', actual)
         msg = ''
         for j in i['vout']:
             hex_script = j['scriptPubKey']['hex']
@@ -32,13 +43,22 @@ def gethistory(addr, page=0):
               'msg' : msg}
 
         txs.append(tx)
-    pages = history['pagesTotal']
-    return [txs, pages]
+    return [txs, history['pagesTotal']]
 
-def getbalance(addr, sendamount=0):
+
+def getbalance(addr):
+    url = 'http://insight.chaucha.cl/api/addr/'
+    balance = get(url + addr).json()
+    return round(float(balance['balance']), 8)
+
+
+def getunspent(addr, sendamount=0):
     # Captura de balance por tx sin gastar
     url = 'http://insight.chaucha.cl/api/addr/'
-    unspent = get(url + addr + '/utxo').json()
+    try:
+        unspent = get(url + addr + '/utxo').json()
+    except:
+        return False
 
     # Variables auxiliares
     inputs = []
@@ -55,85 +75,11 @@ def getbalance(addr, sendamount=0):
                              'address' : i['address']}
 
                 inputs.append(inputs_tx)
-
                 if unspent_balance > int(sendamount):
                     break
         else:
             unconfirmed += i['amount']
-
     if sendamount > 0:
-        unspent = {'used' : round(unspent_balance, 8), 'inputs' : inputs}
-        return unspent
+        return {'used' : round(unspent_balance, 8), 'inputs' : inputs}
     else:
         return [confirmed, unconfirmed]
-
-
-def broadcast(session, unspent, amount, receptor, op_return):
-    # Network
-    magic = 88
-    base_fee = 0.000452
-    fee_per_input = 0.000296
-    COIN = 100000000
-
-    # Parametros de session
-    addr = session['address']
-    privkey = session['privkey']
-
-    # Transformar valores a Chatoshis
-    used_amount = int(amount*COIN)
-    used_unspent = int(unspent['used']*COIN)
-
-    # Input
-    inputs = unspent['inputs']
-
-    # Calculo de fee
-    used_fee = int((base_fee + fee_per_input*len(inputs))*COIN)
-
-    # Output
-    outputs = []
-
-    # Receptor
-    if used_unspent == used_amount:
-        tx_value = (used_amount - used_fee)
-    else:
-        tx_value = used_amount
-
-    outputs.append({'address' : receptor, 'value' : tx_value})
-
-    # Change
-    if used_unspent > used_amount + used_fee:
-        fee = int(used_unspent - used_amount - used_fee)
-        outputs.append({'address' : addr, 'value' : fee})
-
-    # OP_RETURN
-    if len(op_return) > 0 and len(op_return) <= 255:
-        payload = OP_RETURN_payload(op_return)
-        hex_p = b2a_hex(payload).decode('utf-8', errors='ignore')
-        script = '6a' + hex_p
-        outputs.append({'value' : 0, 'script' : script})
-
-    # creación de transacción
-    tx = mktx(inputs, outputs)
-
-    # Firma de cada output
-    for i in range(len(inputs)):
-        tx = sign(tx, i, privkey)
-
-    url = 'http://insight.chaucha.cl/api/tx/send'
-    broadcasting = post(url, data={'rawtx' : tx})
-
-    return broadcasting
-
-def OP_RETURN_payload(string):
-    metadata = bytes(string, 'utf-8')
-    metadata_len = len(metadata)
-
-    if metadata_len <= 75:
-        payload = bytearray((metadata_len, ))
-    elif metadata_len <= 256:
-        payload = b"\x4c" + bytearray((metadata_len, ))
-    else:
-        payload = b"\x4d" + bytearray((metadata_len % 256, ))
-        payload += bytearray((int(metadata_len / 256), ))
-
-    return payload + metadata

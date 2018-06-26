@@ -5,7 +5,7 @@
 
 {% if history|length > 0 %}
 
-<table class="table bg is-hoverable center">
+<table class="table bg is-hoverable is-fullwidth">
 	<thead>
 		<tr class="has-text-centered">
 			<th class="has-text-centered">Fecha</th>
@@ -20,16 +20,12 @@
 			<td class="has-text-centered">{{ tx['time'] }}</td>
 			<td class="has-text-centered is-hidden-touch">{{ tx['confirmations'] }}</td>
 			{% if tx['msg']|length > 0 %}
-				{% if tx['msg']|length > 25 %}
-					<td class="has-text-centered">{{ tx['msg'][:25] }}...</td>
-				{% else %}
-					<td class="has-text-centered">{{ tx['msg'] }}</td>
-				{% endif %}
+					<td class="has-text-centered overflow">{{ tx['msg'] }}</td>
 			{% else %}
 				<td class="has-text-centered">&nbsp;</td>
 			{% endif %}
 			<td class="has-text-centered">
-				<a href="{{ url_for('tx', txid=tx['txid']) }}" class="has-text-primary"><u>Ver más</u></a>
+				<a href="http://insight.chaucha.cl/tx/{{ tx['txid'] }}" class="has-text-primary" target="_blank"><u>Ver más</u></a>
 			</td>
 		</tr>
 		{% endfor %}
