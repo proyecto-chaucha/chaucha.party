@@ -11,10 +11,7 @@
 
 <div class="content is-medium">
 <p>
-	<b>Balance:</b> {{ balance[0]|round(8) }} CHA<br>
-	{% if not balance[1] == 0 %}
-	<b>Sin confirmar:</b> {{ balance[1]|round(8) }} CHA
-	{% endif %}
+	<b>Balance:</b> {{ balance|round(8) }} CHA<br>
 </p>
 
 </div>

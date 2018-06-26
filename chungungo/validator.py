@@ -1,5 +1,4 @@
 # http://rosettacode.org/wiki/Bitcoin/address_validation#Python
-
 from hashlib import sha256
 
 digits58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
@@ -12,7 +11,7 @@ def decode_base58(bc, length):
 
 def check_bc(bc):
     try:
-        bcbytes = decode_base58(bc, 25)
-        return bcbytes[-4:] == sha256(sha256(bcbytes[:-4]).digest()).digest()[:4]
+        bcb = decode_base58(bc, 25)
+        return bcb[-4:] == sha256(sha256(bcb[:-4]).digest()).digest()[:4]
     except Exception:
         return False

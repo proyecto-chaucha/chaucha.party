@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block body %}
+
+{% from "macros.html" import render_qr, render_field %}
+
+<div class="content is-medium">
+	<h2>{{ script[1] }}</h2>
+	<p class="subtitle">(Esta dirección bloqueará Chauchas hasta el bloque #{{ locktime }})</p>
+	<h2>Llave de desbloqueo</h2>
+	<p><code>{{ script[0] }}</code><br>
+	(Con esta llave podrás desbloquear los fondos almacenados en la dirección OP_HODL)</p>
+</div>
+
+{% endblock %}
