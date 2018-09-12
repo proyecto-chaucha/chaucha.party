@@ -48,7 +48,7 @@ def getRedeemScript(locktime, privkey):
     return [script, p2sh_addr]
 
 
-def OP_RETURN_payload(string):
+def getPayload(string):
     metadata = bytes(string, 'utf-8')
     metadata_len = len(metadata)
 
@@ -104,7 +104,7 @@ def maketx(args):
 
     # OP_RETURN
     if len(op_return) > 0 and len(op_return) <= 255:
-        payload = OP_RETURN_payload(op_return)
+        payload = getPayload(op_return)
         hex_p = b2a_hex(payload).decode('utf-8', errors='ignore')
         script = '6a' + hex_p
         outputs.append({'value' : 0, 'script' : script})
