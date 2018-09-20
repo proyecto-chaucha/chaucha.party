@@ -9,14 +9,12 @@
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
 	<meta name="description" content="Chauchera Online">
 	<meta name="author" content="Proyecto Chaucha">
-	<script type="text/javascript" src="{{ url_for('static', filename='particles.min.js') }}"></script>
 	<style type="text/css">
-	@import url('https://fonts.googleapis.com/css?family=Montserrat:300|Inconsolata');
-	body { font-family: 'Montserrat', sans-serif; font-size: 1em; }
+	@import url('https://fonts.googleapis.com/css?family=Montserrat+Alternates:300|Inconsolata');
+	body { font-family: 'Montserrat Alternates', sans-serif; font-size: 1em; color: #000; }
 	code { font-family: 'Inconsolata', monospace; font-size: 1.1em; }
 	.overflow ( text-overflow: ellipsis; )
-	.addr { font-size: 0.9em; }
-	.bg { background: rgba(255, 255, 255, 0.3); }
+	.home { letter-spacing: 10px; }
 	table.center { margin-left:auto; margin-right:auto; }
 	h1 {letter-spacing: 3px; }
 	</style>
@@ -64,6 +62,19 @@
 						Crear dirección
 					</a>
 					<a class="navbar-item" href="{{ url_for('hodlspend') }}">
+						Desbloquear
+					</a>
+				</div>
+			</div>
+			<div class="navbar-item has-dropdown is-hoverable">
+				<a class="navbar-link">
+					Transacción Puzzle
+				</a>
+				<div class="navbar-dropdown">
+					<a class="navbar-item" href="{{ url_for('puzzlecreate') }}">
+						Crear dirección
+					</a>
+					<a class="navbar-item" href="{{ url_for('puzzlespend') }}">
 						Desbloquear
 					</a>
 				</div>

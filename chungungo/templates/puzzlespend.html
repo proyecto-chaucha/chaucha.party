@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block body %}
+
+{% from "macros.html" import render_qr, render_field %}
+
+<h1 class="title">Utilizar dirección puzzle</h1>
+
+<div class="content is-medium">
+	<p>Extraer fondos almacenados en una dirección puzzle utilizando una solución válida.</p>
+</div>
+
+<form action="{{ url_for('puzzlespend') }}" method="post">
+{{ form.csrf_token }}
+{{ render_qr(form.address, class="input is-large is-primary") }}
+{{ render_field(form.solution, class="input is-large is-primary") }}
+<div class="field">
+	<p class="control">
+		<div class="buttons is-right">
+		<button class="button is-large is-primary is-rounded">
+			<i class="fas fa-bullhorn"></i>
+		</button>
+		</div>
+	</p>
+</div>
+</form>
+
+{% endblock %}

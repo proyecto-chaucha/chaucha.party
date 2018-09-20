@@ -17,7 +17,6 @@ def login_required(f):
     return decorated_function
 
 def flash_tx(msg_raw):
-    print(msg_raw.text)
     try:
         msg = msg_raw.json()
         flash(Markup('Transacción enviada exitosamente<br>'
@@ -33,19 +32,56 @@ def index():
     balance = getbalance(session['address'])
     return render_template('home.html', balance=balance)
 
+@app.route('/puzzle/create', methods=['GET','POST'])
+@login_required
+def puzzlecreate():
+    form = puzzlecreateform(request.form)
+    if form.validate_on_submit():
+        solution = request.form['solution']
+        script = getRedeemScript(['HASH256', request.form['solution']])
+        addr = script[1]
+        return render_template('puzzlesuccess.html', addr=addr, solv=solution)
+
+    return render_template('puzzlecreate.html', form=form)
+
+@app.route('/puzzle/spend', methods=['GET','POST'])
+@login_required
+def puzzlespend():
+    form = puzzlespendform(request.form)
+    if form.validate_on_submit():
+        solution = request.form['solution']
+        receptor = request.form['address']
+
+        redeem = getRedeemScript(['HASH256', solution])
+        script, script_addr = redeem
+
+        balance = getbalance(script_addr)
+        unspent = getunspent(script_addr, balance)
+
+        if balance > 0:
+            args = [script, solution, receptor, unspent, balance]
+            tx = P2SHtx(args)
+            msg_raw = broadcast(tx)
+            flash_tx(msg_raw)
+            return redirect(url_for('index'))
+
+    return render_template('puzzlespend.html', form=form)
+
 @app.route('/hodl/create', methods=['GET','POST'])
 @login_required
 def hodlcreate():
     form = hodlcreateform(request.form)
     if form.validate_on_submit():
-        locktime = int(request.form['locktime'])
+        locktime = int(float(request.form['locktime']))
         if locktime > 0:
-            privkey = session['privkey']
-            script = getRedeemScript(locktime, privkey)
+            script = getRedeemScript(['CLTV', locktime, session['privkey']])
+
             return render_template('hodlsuccess.html',
                                     script=script,
                                     locktime=locktime)
+
         flash('Locktime - Error de formato', 'is-danger')
+
     return render_template('hodlcreate.html', form=form)
 
 @app.route('/hodl/spend', methods=['GET','POST'])
@@ -64,9 +100,10 @@ def hodlspend():
             unspent = getunspent(script_addr, balance)
             if balance > 0:
                 args = [script, session, receptor, unspent, balance]
-                tx = hodlspendtx(args)
+                tx = P2SHtx(args)
                 msg_raw = broadcast(tx)
                 flash_tx(msg_raw)
+                return redirect(url_for('index'))
             else:
                 flash('Script - Dirección OP_HODL sin saldo', 'is-danger')
         else:
@@ -112,6 +149,9 @@ def send():
 
         if check_bc(receptor):
             unspent = getunspent(session['address'], amount)
+            flash(amount)
+            flash(unspent)
+            flash(amount <= unspent['used'])
 
             if amount <= unspent['used']:
                 args = [session, unspent, amount, receptor, op_return]

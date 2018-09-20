@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block body %}
+
+{% from "macros.html" import render_qr, render_field %}
+
+<div class="content is-medium">
+	<h2>{{ addr }}</h2>
+	<p class="subtitle">El saldo de esta dirección solo será posible de extraer con la solución correcta</p>
+	<h2>Solución de la transacción puzzle</h2>
+	<code>{{solv}}</code>
+</div>
+
+{% endblock %}
