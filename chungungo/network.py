@@ -75,7 +75,7 @@ def getunspent(addr, sendamount=0):
                              'address' : i['address']}
 
                 inputs.append(inputs_tx)
-                if unspent_balance > int(sendamount):
+                if unspent_balance >= int(sendamount):
                     break
         else:
             unconfirmed += i['amount']

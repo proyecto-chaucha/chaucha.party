@@ -3,17 +3,9 @@
 
 
 <img src="{{ qrcode(session['address'], error_correction='H') }}"><br>
-<p class="addr">
-	{{ session['address'] }}
-</p>
 
+<p class="is-size-7 has-text-weight-bold">{{ session['address'] }}</p>
 <br>
-
-<div class="content is-medium">
-<p>
-	<b>Balance:</b> {{ balance|round(8) }} CHA<br>
-</p>
-
+<p class="is-size-5">{{ balance|round(8) }} CHA</p>
 </div>
-
 {% endblock %}

@@ -1,6 +1,7 @@
 from bitcoin import *
 from binascii import hexlify, b2a_hex, a2b_hex
 from struct import pack, unpack
+from hashlib import new
 from chungungo.params import *
 
 def gethexlen(string):
@@ -25,30 +26,42 @@ def getfee(array):
     return fee
 
 
-def getRedeemScript(locktime, privkey):
-    # Create hex-compressed public key
-    pubkey = encode_pubkey(privtopub(privkey), 'hex_compressed')
+def getRedeemScript(args):
+    if args[0] == 'CLTV':
+        type, locktime, privkey = args
 
-    # little-endian hex packing
-    locktime = hexlify(pack('<i', locktime)).decode('utf-8')
+        # Create hex-compressed public key
+        pubkey = encode_pubkey(privtopub(privkey), 'hex_compressed')
 
-    # remove zeros
-    locktime = locktime.rstrip('0')
-    if len(locktime) % 2 > 0:
-        locktime += '0'
+        # little-endian hex packing
+        locktime = hexlify(pack('<i', locktime)).decode('utf-8')
 
-    # 33 bytes hex-compressed pubkey
-    pubkey = gethexlen(pubkey) + pubkey
-    locktime = gethexlen(locktime) + locktime
+        # remove zeros
+        locktime = locktime.rstrip('0')
+        if len(locktime) % 2 > 0:
+            locktime += '0'
 
-    # PAY-TO-PUBKEY OP_CHECKLOCKTIMEVERIFY
-    script = locktime + OP_CHECKLOCKTIMEVERIFY + OP_DROP + pubkey + OP_CHECKSIG
+        # 33 bytes hex-compressed pubkey
+        pubkey = gethexlen(pubkey) + pubkey
+        locktime = gethexlen(locktime) + locktime
+
+        # PAY-TO-PUBKEY OP_CHECKLOCKTIMEVERIFY
+        script = locktime + OP_CHECKLOCKTIMEVERIFY + OP_DROP + pubkey + OP_CHECKSIG
+
+    elif args[0] == 'HASH256':
+        type, solution = args
+
+        # SHA256(SHA256(solution))
+        hexsolution = new('sha256', new('sha256', solution.encode()).digest()).hexdigest()
+
+        # OP_HASH256 <hexsolution> OP_EQUAL
+        script = OP_HASH256 + gethexlen(hexsolution) + hexsolution + OP_EQUAL
+
     p2sh_addr = scriptaddr(script, 50)
-
     return [script, p2sh_addr]
 
 
-def OP_RETURN_payload(string):
+def getPayload(string):
     metadata = bytes(string, 'utf-8')
     metadata_len = len(metadata)
 
@@ -65,7 +78,7 @@ def OP_RETURN_payload(string):
 
 def maketx(args):
     session, unspent, amount, receptor, op_return = args
-    
+
     # Parametros de session
     addr = session['address']
     privkey = session['privkey']
@@ -104,7 +117,7 @@ def maketx(args):
 
     # OP_RETURN
     if len(op_return) > 0 and len(op_return) <= 255:
-        payload = OP_RETURN_payload(op_return)
+        payload = getPayload(op_return)
         hex_p = b2a_hex(payload).decode('utf-8', errors='ignore')
         script = '6a' + hex_p
         outputs.append({'value' : 0, 'script' : script})
@@ -117,11 +130,9 @@ def maketx(args):
 
     return tx
 
-def hodlspendtx(args):
-    script, session, receptor, unspent, balance = args
-    privkey = session['privkey']
+def P2SHtx(args):
+    script, usr, receptor, unspent, balance = args
     addr = getScriptAddr(script)
-    locktime = getlocktime(script)
 
     # Fee
     ins = unspent['inputs']
@@ -135,25 +146,25 @@ def hodlspendtx(args):
     # Make unsigned transaction
     tx = mktx(ins, outs)
 
-    # Append nLockTime and reset nSequence
-    unpacked = deserialize(tx)
-    unpacked['locktime'] = locktime
-    for i in range(len_inputs):
-        unpacked['ins'][i]['sequence'] = 0
-    tx = serialize(unpacked)
+    if 'csrf_token' in usr:
+        # Append nLockTime and reset nSequence
+        unpacked = deserialize(tx)
+        unpacked['locktime'] = getlocktime(script)
+        for i in range(len_inputs):
+            unpacked['ins'][i]['sequence'] = 0
+        tx = serialize(unpacked)
 
-    print(tx)
-
-    # get all signatures
-    sigs = []
-    for i in range(len_inputs):
-        sigs.append(multisign(tx, i, script, privkey))
 
     # sign inputs
     unpacked = deserialize(tx)
     for i in range(len_inputs):
-        # Signature
-        unpacked['ins'][i]['script'] = gethexlen(sigs[i]) + sigs[i]
+        if 'csrf_token' in usr:
+            sig = multisign(tx, i, script, usr['privkey'])
+            unpacked['ins'][i]['script'] = gethexlen(sig) + sig
+        else:
+            hexsolv = b2a_hex(usr.encode()).decode('utf-8')
+            unpacked['ins'][i]['script'] = gethexlen(hexsolv) + hexsolv
+
         # P2SH redeem script
         unpacked['ins'][i]['script'] += gethexlen(script) + script
 

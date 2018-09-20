@@ -7,40 +7,20 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
-
-	<meta name="description" content="Proyecto Chaucha - 2018">
-	<meta name="keywords" content="chaucha, cryptocurrency, chauchera">
-	<meta name="author" content="César Vásquez C.">
-	<script type="text/javascript" src="{{ url_for('static', filename='particles.min.js') }}"></script>
+	<meta name="description" content="Chauchera Online">
+	<meta name="author" content="Proyecto Chaucha">
 	<style type="text/css">
-	@import url('https://fonts.googleapis.com/css?family=Montserrat:300|Inconsolata');
-
-	body { font-family: 'Montserrat', sans-serif; font-size: 1em; }
+	@import url('https://fonts.googleapis.com/css?family=Montserrat+Alternates:300|Inconsolata');
+	body { font-family: 'Montserrat Alternates', sans-serif; font-size: 1em; color: #000; }
 	code { font-family: 'Inconsolata', monospace; font-size: 1.1em; }
 	.overflow ( text-overflow: ellipsis; )
-	.addr { font-size: 0.9em; }
-	.bg { background: rgba(255, 255, 255, 0.3); }
+	.home { letter-spacing: 10px; }
 	table.center { margin-left:auto; margin-right:auto; }
 	h1 {letter-spacing: 3px; }
-	#particle {
-		background-color: #FFF;
-		position:fixed;
-		top:0;
-		right:0;
-		bottom:0;
-		left:0;
-		z-index:0;
-	}
 	</style>
 </head>
 <body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-<div id="particle"></div>
-<script type="text/javascript">
-// ParticlesJS Config.
-particlesJS("particle",{particles:{number:{value:30,density:{enable:!0,value_area:700}},color:{value:"#05C9E3"},shape:{type:"circle",stroke:{width:2,color:"#05C9E3"},polygon:{nb_sides:5}},opacity:{value:0.8,random:!1,anim:{enable:!1,speed:1,opacity_min:.1,sync:!1}},size:{value:2,random:!0,anim:{enable:!1,speed:40,size_min:.1,sync:!1}},line_linked:{enable:!0,distance:150,color:"#3DF0FD",opacity:.7,width:2},move:{enable:!0,speed:3,direction:"none",random:!1,straight:!1,out_mode:"out",bounce:!1,attract:{enable:!1,rotateX:600,rotateY:1200}}},interactivity:{detect_on:"canvas",events:{onhover:{enable:!0,mode:"grab"},onclick:{enable:!0,mode:"push"},resize:!0},modes:{grab:{distance:140,line_linked:{opacity:1}},bubble:{distance:400,size:40,duration:2,opacity:8,speed:3},repulse:{distance:200,duration:.4},push:{particles_nb:4},remove:{particles_nb:2}}},retina_detect:!0});
-</script>
 
 <section class="hero is-fullheight">
 	<!-- Hero head: will stick at the top -->
@@ -82,6 +62,19 @@ particlesJS("particle",{particles:{number:{value:30,density:{enable:!0,value_are
 						Crear dirección
 					</a>
 					<a class="navbar-item" href="{{ url_for('hodlspend') }}">
+						Desbloquear
+					</a>
+				</div>
+			</div>
+			<div class="navbar-item has-dropdown is-hoverable">
+				<a class="navbar-link">
+					Transacción Puzzle
+				</a>
+				<div class="navbar-dropdown">
+					<a class="navbar-item" href="{{ url_for('puzzlecreate') }}">
+						Crear dirección
+					</a>
+					<a class="navbar-item" href="{{ url_for('puzzlespend') }}">
 						Desbloquear
 					</a>
 				</div>

@@ -19,6 +19,13 @@ class sendform(FlaskForm):
 class hodlcreateform(FlaskForm):
     locktime = FloatField('Locktime', validators=[DataRequired()])
 
+class puzzlecreateform(FlaskForm):
+    solution = StringField('Solución', validators=[DataRequired()])
+
+class puzzlespendform(FlaskForm):
+    solution = StringField('Solución', validators=[DataRequired()])
+    address = StringField('Destinatario', validators=[DataRequired()])
+
 class hodlspendform(FlaskForm):
     address = StringField('Destinatario', validators=[DataRequired()])
     script = StringField('Llave', validators=[DataRequired()])
