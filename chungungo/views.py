@@ -149,9 +149,6 @@ def send():
 
         if check_bc(receptor):
             unspent = getunspent(session['address'], amount)
-            flash(amount)
-            flash(unspent)
-            flash(amount <= unspent['used'])
 
             if amount <= unspent['used']:
                 args = [session, unspent, amount, receptor, op_return]
