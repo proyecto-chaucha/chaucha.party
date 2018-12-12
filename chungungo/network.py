@@ -2,16 +2,17 @@ from chungungo.functions import *
 from requests import get, post
 from binascii import a2b_hex
 from time import localtime, strftime
+from chungungo import app
 
 def broadcast(tx):
-    url = 'http://insight.chaucha.cl/api/tx/send'
+    url = app.config['API_URL'] + '/api/tx/send'
     broadcasting = post(url, data={'rawtx' : tx})
 
     return broadcasting
 
 
 def checklocktime(script):
-    url = 'http://insight.chaucha.cl/api/status?getInfo'
+    url = app.config['API_URL'] + '/api/status?getInfo'
     last_block = get(url).json()['info']['blocks']
     locktime = getlocktime(script)
 
@@ -19,7 +20,7 @@ def checklocktime(script):
 
 
 def gethistory(addr, page=0):
-    url = 'http://insight.chaucha.cl/api/txs/?address='
+    url = app.config['API_URL'] + '/api/txs/?address='
     history = get(url + addr + '&pageNum=' + str(page)).json()
 
     txs = []
@@ -47,14 +48,14 @@ def gethistory(addr, page=0):
 
 
 def getbalance(addr):
-    url = 'http://insight.chaucha.cl/api/addr/'
+    url = app.config['API_URL'] + '/api/addr/'
     balance = get(url + addr).json()
     return round(float(balance['balance']), 8)
 
 
 def getunspent(addr, sendamount=0):
     # Captura de balance por tx sin gastar
-    url = 'http://insight.chaucha.cl/api/addr/'
+    url = app.config['API_URL'] + '/api/addr/'
     try:
         unspent = get(url + addr + '/utxo').json()
     except:
