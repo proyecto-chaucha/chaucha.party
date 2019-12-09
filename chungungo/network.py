@@ -4,9 +4,10 @@ from binascii import a2b_hex
 from time import localtime, strftime
 from chungungo import app
 
+
 def broadcast(tx):
     url = app.config['API_URL'] + '/api/tx/send'
-    broadcasting = post(url, data={'rawtx' : tx})
+    broadcasting = post(url, data={'rawtx': tx})
 
     return broadcasting
 
@@ -38,10 +39,10 @@ def gethistory(addr, page=0):
 
                 msg = a2b_hex(sub_script).decode('utf-8', errors='ignore')
 
-        tx = {'confirmations' : i['confirmations'],
-              'txid' : i['txid'],
-              'time' : date,
-              'msg' : msg}
+        tx = {'confirmations': i['confirmations'],
+              'txid': i['txid'],
+              'time': date,
+              'msg': msg}
 
         txs.append(tx)
     return [txs, history['pagesTotal']]
@@ -71,9 +72,9 @@ def getunspent(addr, sendamount=0):
 
             if sendamount > 0:
                 unspent_balance += i['amount']
-                inputs_tx = {'output' : i['txid'] + ':' + str(i['vout']),
-                             'value' : i['satoshis'],
-                             'address' : i['address']}
+                inputs_tx = {'output': i['txid'] + ':' + str(i['vout']),
+                             'value': i['satoshis'],
+                             'address': i['address']}
 
                 inputs.append(inputs_tx)
                 if unspent_balance >= int(sendamount):
@@ -81,6 +82,6 @@ def getunspent(addr, sendamount=0):
         else:
             unconfirmed += i['amount']
     if sendamount > 0:
-        return {'used' : round(unspent_balance, 8), 'inputs' : inputs}
+        return {'used': round(unspent_balance, 8), 'inputs': inputs}
     else:
         return [confirmed, unconfirmed]

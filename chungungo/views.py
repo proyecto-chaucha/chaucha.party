@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, request, \
-                  session, flash, Markup
+    session, flash, Markup
 from flask_babel import gettext
 from chungungo.validator import *
 from chungungo.network import *
@@ -8,6 +8,7 @@ from chungungo.params import *
 from chungungo import app
 from functools import wraps
 
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -15,6 +16,7 @@ def login_required(f):
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
+
 
 def flash_tx(msg_raw):
     try:
@@ -26,13 +28,15 @@ def flash_tx(msg_raw):
         flash(Markup('Error de transmisión<br>'
                      + msg), 'is-danger')
 
+
 @app.route('/')
 @login_required
 def index():
     balance = getbalance(session['address'])
     return render_template('home.html', balance=balance)
 
-@app.route('/puzzle/create', methods=['GET','POST'])
+
+@app.route('/puzzle/create', methods=['GET', 'POST'])
 @login_required
 def puzzlecreate():
     form = puzzlecreateform(request.form)
@@ -44,7 +48,8 @@ def puzzlecreate():
 
     return render_template('puzzlecreate.html', form=form)
 
-@app.route('/puzzle/spend', methods=['GET','POST'])
+
+@app.route('/puzzle/spend', methods=['GET', 'POST'])
 @login_required
 def puzzlespend():
     form = puzzlespendform(request.form)
@@ -67,7 +72,8 @@ def puzzlespend():
 
     return render_template('puzzlespend.html', form=form)
 
-@app.route('/hodl/create', methods=['GET','POST'])
+
+@app.route('/hodl/create', methods=['GET', 'POST'])
 @login_required
 def hodlcreate():
     form = hodlcreateform(request.form)
@@ -77,14 +83,15 @@ def hodlcreate():
             script = getRedeemScript(['CLTV', locktime, session['privkey']])
 
             return render_template('hodlsuccess.html',
-                                    script=script,
-                                    locktime=locktime)
+                                   script=script,
+                                   locktime=locktime)
 
         flash('Locktime - Error de formato', 'is-danger')
 
     return render_template('hodlcreate.html', form=form)
 
-@app.route('/hodl/spend', methods=['GET','POST'])
+
+@app.route('/hodl/spend', methods=['GET', 'POST'])
 @login_required
 def hodlspend():
     form = hodlspendform(request.form)
@@ -110,12 +117,14 @@ def hodlspend():
             flash('Script - Locktime menor a tamaño de blockchain', 'is-danger')
     return render_template('hodlspend.html', form=form)
 
+
 @app.route('/paper')
 def paper():
     privkey = encode_privkey(random_key(), 'wif', magic)
     address = privtoaddr(privkey, magic)
-    wallet = {'address' : address, 'privkey' : privkey}
+    wallet = {'address': address, 'privkey': privkey}
     return render_template('wallet.html', wallet=wallet)
+
 
 @app.route('/history')
 @login_required
@@ -128,11 +137,12 @@ def history():
     history, pages = gethistory(session['address'], current_page)
 
     return render_template('history.html',
-                            history=history,
-                            pages=pages,
-                            current_page=current_page)
+                           history=history,
+                           pages=pages,
+                           current_page=current_page)
 
-@app.route('/send', methods=['GET','POST'])
+
+@app.route('/send', methods=['GET', 'POST'])
 @login_required
 def send():
     form = sendform(request.form)
@@ -169,7 +179,7 @@ def send():
         return render_template('send.html', balance=balance, form=form)
 
 
-@app.route('/login', methods=['GET','POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = privkeyform(request.form)
     if form.validate_on_submit():
@@ -186,6 +196,7 @@ def login():
     else:
         flash_errors(form)
     return render_template('login.html', form=form)
+
 
 @app.route('/logout')
 def logout():

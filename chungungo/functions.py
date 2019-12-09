@@ -4,20 +4,24 @@ from struct import pack, unpack
 from hashlib import new
 from chungungo.params import *
 
+
 def gethexlen(string):
     return '{:02x}'.format(int(len(string)/2))
 
+
 def getlocktime(script):
     locktime_len = int(script[0:2])
-    locktime_packed = script[2 : locktime_len*2 + 2]
+    locktime_packed = script[2: locktime_len*2 + 2]
 
     if locktime_len < 4:
         locktime_packed += '00'*(4 - locktime_len)
 
     return unpack('<i', a2b_hex(locktime_packed))[0]
 
+
 def getScriptAddr(script):
     return scriptaddr(script, 50)
+
 
 def getfee(array):
     fee = int((base_fee + fee_per_input*len(array))*COIN)
@@ -52,7 +56,8 @@ def getRedeemScript(args):
         type, solution = args
 
         # SHA256(SHA256(solution))
-        hexsolution = new('sha256', new('sha256', solution.encode()).digest()).hexdigest()
+        hexsolution = new('sha256', new(
+            'sha256', solution.encode()).digest()).hexdigest()
 
         # OP_HASH256 <hexsolution> OP_EQUAL
         script = OP_HASH256 + gethexlen(hexsolution) + hexsolution + OP_EQUAL
@@ -106,21 +111,21 @@ def maketx(args):
     if receptor[0] == 'M':
         scrpthash = b58check_to_hex(receptor)
         p2sh_script = OP_HASH160 + gethexlen(scrpthash) + scrpthash + OP_EQUAL
-        outputs.append({'value' : tx_value, 'script' : p2sh_script})
+        outputs.append({'value': tx_value, 'script': p2sh_script})
     else:
-        outputs.append({'address' : receptor, 'value' : tx_value})
+        outputs.append({'address': receptor, 'value': tx_value})
 
     # Change
     if used_unspent > used_amount + used_fee:
         fee = int(used_unspent - used_amount - used_fee)
-        outputs.append({'address' : addr, 'value' : fee})
+        outputs.append({'address': addr, 'value': fee})
 
     # OP_RETURN
     if len(op_return) > 0 and len(op_return) <= 255:
         payload = getPayload(op_return)
         hex_p = b2a_hex(payload).decode('utf-8', errors='ignore')
         script = '6a' + hex_p
-        outputs.append({'value' : 0, 'script' : script})
+        outputs.append({'value': 0, 'script': script})
 
     # raw TX
     tx = mktx(inputs, outputs)
@@ -129,6 +134,7 @@ def maketx(args):
         tx = sign(tx, i, privkey)
 
     return tx
+
 
 def P2SHtx(args):
     script, usr, receptor, unspent, balance = args
@@ -141,7 +147,7 @@ def P2SHtx(args):
 
     # Outputs
     out_value = int(balance * COIN) - fee
-    outs = [{'address' : receptor, 'value' : out_value}]
+    outs = [{'address': receptor, 'value': out_value}]
 
     # Make unsigned transaction
     tx = mktx(ins, outs)
@@ -153,7 +159,6 @@ def P2SHtx(args):
         for i in range(len_inputs):
             unpacked['ins'][i]['sequence'] = 0
         tx = serialize(unpacked)
-
 
     # sign inputs
     unpacked = deserialize(tx)
