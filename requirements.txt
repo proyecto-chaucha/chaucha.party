@@ -1,6 +1,6 @@
 Babel==2.7.0
 bitcoin==1.1.42
-certifi==2019.11.28
+certifi==2022.12.7
 chardet==3.0.4
 Click==7.0
 colorama==0.4.1
